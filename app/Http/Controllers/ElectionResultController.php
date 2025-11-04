@@ -263,21 +263,36 @@ public function saveTopSeats(Request $request)
     if ($totalSeats > 243) {
         return redirect()->back()
             ->withInput()
-            ->with('error', '  You have exceeded by ' . ($totalSeats - 243) . ' seats.');
+            ->with('error', '   You have exceeded by ' . ($totalSeats - 243) . ' seats.');
 
     }
 
     // Step 3: Save data if within limit
     foreach ($parties as $party) {
         $inputName = 'seat_' . strtolower($party->abbreviation);
+        
+        // --- NEW ---
+        // Get the name for the sequence input
+        $sequenceInputName = 'sequence_' . strtolower($party->abbreviation);
+        // --- END NEW ---
 
         if ($request->has($inputName)) {
+            
+            // --- MODIFIED ---
             $party->seats_won = $request->input($inputName);
+            
+            // Check if the sequence input was submitted and update it
+            if ($request->has($sequenceInputName)) {
+                 $party->sequence = $request->input($sequenceInputName);
+            }
+            
             $party->save();
+            // --- END MODIFIED ---
         }
     }
 
-    return redirect()->back()->with('success', ' Seats updated successfully!');
+    // --- MODIFIED ---
+    return redirect()->back()->with('success', ' Seats and sequence updated successfully!');
 }
 
 // public function voteCountList()
