@@ -13,7 +13,13 @@
     <link href="{{ asset('asset/css/big-breaking.css') }}" rel="stylesheet">
 
     <link href="{{ asset('/frontend/images/logo.png') }}" rel="shortcut icon" type="image/x-icon">
+    @php
+        $canonicalUrl = str_replace('/amp', '/', url()->current());
+        $ampUrl = url()->current();
+    @endphp
 
+    <link rel="canonical" href="{{ $canonicalUrl }}" />
+    <link rel="amphtml" href="{{ $ampUrl }}" />
 
     <script type="application/ld+json">
 {
