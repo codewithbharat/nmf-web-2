@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Blog;
 use App\Models\Category;
@@ -22,6 +21,8 @@ use App\Models\Mahamukabla;
 use App\Models\Candidate;
 use App\Models\ElectionResult;
 use Jenssegers\Agent\Agent; //  Import Agent
+
+use App\Helpers\AmpHelper;
 
 class StoryController extends Controller
 {
@@ -665,6 +666,14 @@ public function showStoryAmp($cat_name, $name)
 
     public function liveBlogs($cat_name, $name)
     {
+        $agent = new Agent();
+        if ($agent->isMobile()) {
+            // Redirect mobile users to the new AMP route
+            return redirect()->route('liveBlogsAmp', [
+                'cat_name' => $cat_name,
+                'name' => $name
+            ]);
+        }
         $category = Category::where('site_url', $cat_name)->first();
 
         if (!$category) {
@@ -696,6 +705,43 @@ public function showStoryAmp($cat_name, $name)
             'liveDetailAds' => $liveDetailAds,
         ]);
     }
+
+    public function liveBlogsAmp($cat_name, $name)
+{
+    // --- This logic is copied from your liveBlogs method ---
+    $category = Category::where('site_url', $cat_name)->first();
+    if (!$category) {
+        return view('error');
+    }
+
+    $blog = Blog::where('site_url', $name)->with('images')->first();
+    if (!$blog) {
+        return view('error');
+    }
+    
+    $author =  User::where('id', $blog->author)->first();
+    $liveDetailAds = Ads::where('page_type', 'details')->get()->keyBy('location');
+
+    $liveBlogs = collect(
+        LiveBlog::where('status', '1')
+            ->where('blog_id', $blog->id)
+            ->orderBy('created_at', 'DESC')
+            ->cursor()
+    );
+    // --- End of copied logic ---
+
+ foreach ($liveBlogs as $liveBlog) {
+            $liveBlog->update_content = AmpHelper::convertEmbedsToAmp($liveBlog->update_content);
+        }
+    // Render the new AMP view
+    return view('liveBlogs-amp', [
+        'blogs' => $blog,
+        'category' => $category,
+        'liveBlogs' => $liveBlogs,
+        'author' => $author,
+        'liveDetailAds' => $liveDetailAds,
+    ]);
+}
     public function nmfvideos()
     {
 

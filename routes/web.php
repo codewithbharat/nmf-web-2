@@ -452,6 +452,7 @@ Route::post('/bannersequence', [BannerHomePageController::class, 'updateBannerDi
 Route::post('/bannersequence/bannerUpdate', [BannerHomePageController::class, 'bannerUpdate'])->name('bannerUpdate');
 Route::get('author/{name}', [StoryController::class, 'author'])->name('author');
 Route::get('state/{name}', [StoryController::class, 'state'])->name('state');
+Route::get('/live/{cat_name}/{name}/amp', [StoryController::class, 'liveBlogsAmp'])->name('liveBlogsAmp');
 Route::get('/live/{cat_name}/{name}', [StoryController::class, 'liveBlogs'])->name('liveBlogs');
 Route::get('/about', [StoryController::class, 'about'])->name('about');
 Route::get('/search', [StoryController::class, 'search'])->name('search');
