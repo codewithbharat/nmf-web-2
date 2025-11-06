@@ -1410,7 +1410,7 @@
 
     @if (!empty($data['blog']->link))
         <script type="application/ld+json">
-                                                                                                                                    {!! json_encode([
+                                                                                                                                            {!! json_encode([
             "@context" => "https://schema.org",
             "@type" => "VideoObject",
             "name" => $data['blog']->name,
@@ -1430,7 +1430,7 @@
                 ]
             ]
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
-                                                                                                                                </script>
+                                                                                                                                        </script>
     @endif
 
     <script type="application/ld+json">
@@ -1466,7 +1466,7 @@
     @endphp
     @if (!empty($video?->link))
         <script type="application/ld+json">
-                                                                                                                                {!! json_encode([
+                                                                                                                                        {!! json_encode([
             "@context" => "https://schema.org",
             "@type" => "VideoObject",
             "name" => $video->name,
@@ -1486,7 +1486,7 @@
                 ]
             ]
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
-                                                                                                                            </script>
+                                                                                                                                    </script>
     @endif
 </head>
 
@@ -1528,16 +1528,16 @@
         on-error-remove-class="noto-sans-loading" on-load-add-class="noto-sans-loaded">
     </amp-font>
     <?php
-    
-    $menus = App\Models\Menu::whereRelation('type', 'type', 'Header')
-        ->whereRelation('category', 'category', 'User')
-        ->where([['status', '1'], ['menu_id', 0]])
-        ->whereNotNull('sequence_id')
-        ->where('sequence_id', '!=', 0)
-        ->orderBy('sequence_id', 'asc')
-        ->get()
-        ->take(11)
-        ->toArray();
+
+$menus = App\Models\Menu::whereRelation('type', 'type', 'Header')
+    ->whereRelation('category', 'category', 'User')
+    ->where([['status', '1'], ['menu_id', 0]])
+    ->whereNotNull('sequence_id')
+    ->where('sequence_id', '!=', 0)
+    ->orderBy('sequence_id', 'asc')
+    ->get()
+    ->take(11)
+    ->toArray();
     ?>
     <header class="--header-amp">
         <div class="cm-container">
@@ -1567,8 +1567,8 @@
 
 
                             <small class="Headertag m-0 htag" style="margin-left: 0px;white-space: nowrap;"> <span
-                                    class="" style="color: #fff;">जिस पर देश</span><span
-                                    class="HeadertagHalf">करता है भरोसा</span> </small>
+                                    class="" style="color: #fff;">जिस पर देश</span><span class="HeadertagHalf">करता है
+                                    भरोसा</span> </small>
                         </div>
 
                         <amp-lightbox id="ampModalMenu" layout="nodisplay">
@@ -1588,37 +1588,36 @@
                                 </div>
 
                                 <?php
-                                // Define category-to-icon mapping
-                                $categoryIcons = [
-                                    'न्यूज' => 'fa-solid fa-newspaper',
-                                    'राज्य' => 'fa-solid fa-landmark',
-                                    'एक्सक्लूसिव' => 'fa-solid fa-star',
-                                    'खेल' => 'fa-solid fa-futbol',
-                                    'मनोरंजन' => 'fa-solid fa-film',
-                                    'धर्म ज्ञान' => 'fa-solid fa-om',
-                                    'टेक्नोलॉजी' => 'fa-solid fa-microchip',
-                                    'लाइफस्टाइल' => 'fa-solid fa-heart',
-                                    'पॉडकास्ट' => 'fa-solid fa-podcast',
-                                    'दुनिया' => 'fa-solid fa-globe',
-                                    'विधान सभा चुनाव' => 'fa-solid fa-vote-yea',
-                                ];
-                                //$toggleMenus = App\Models\Menu::where('menu_id', 0)->where('status', 1)->where('type_id', '1')->where('category_id', '2')->get();
-                                //$toggleMenus = App\Models\Menu::where('menu_id', 0)->get();
-                                $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
-                                    ->whereRelation('category', 'category', 'User')
-                                    ->where([['status', '1'], ['menu_id', 0]])
-                                    ->whereNotNull('sequence_id')
-                                    ->where('sequence_id', '!=', 0)
-                                    ->orderBy('sequence_id', 'asc')
-                                    ->get();
+// Define category-to-icon mapping
+$categoryIcons = [
+    'न्यूज' => 'fa-solid fa-newspaper',
+    'राज्य' => 'fa-solid fa-landmark',
+    'एक्सक्लूसिव' => 'fa-solid fa-star',
+    'खेल' => 'fa-solid fa-futbol',
+    'मनोरंजन' => 'fa-solid fa-film',
+    'धर्म ज्ञान' => 'fa-solid fa-om',
+    'टेक्नोलॉजी' => 'fa-solid fa-microchip',
+    'लाइफस्टाइल' => 'fa-solid fa-heart',
+    'पॉडकास्ट' => 'fa-solid fa-podcast',
+    'दुनिया' => 'fa-solid fa-globe',
+    'विधान सभा चुनाव' => 'fa-solid fa-vote-yea',
+];
+//$toggleMenus = App\Models\Menu::where('menu_id', 0)->where('status', 1)->where('type_id', '1')->where('category_id', '2')->get();
+//$toggleMenus = App\Models\Menu::where('menu_id', 0)->get();
+$toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
+    ->whereRelation('category', 'category', 'User')
+    ->where([['status', '1'], ['menu_id', 0]])
+    ->whereNotNull('sequence_id')
+    ->where('sequence_id', '!=', 0)
+    ->orderBy('sequence_id', 'asc')
+    ->get();
                                 ?>
 
                                 <ul class="modalmenu">
                                     @foreach ($toggleMenus as $menu)
                                         <li class="modal_item">
                                             <a href="{{ asset($menu->menu_link) }}">
-                                                <i
-                                                    class="{{ $categoryIcons[$menu->menu_name] ?? 'fa-solid fa-link' }}"></i>
+                                                <i class="{{ $categoryIcons[$menu->menu_name] ?? 'fa-solid fa-link' }}"></i>
                                                 {{ $menu->menu_name }}
                                                 @php
                                                     $subMenus = App\Models\Menu::where('menu_id', $menu->id)
@@ -1706,8 +1705,8 @@
 
         <!-- Header Ad -->
         <div class="ad-container">
-            <amp-ad layout="responsive" width="300" height="300" type="adsense"
-                data-ad-client="ca-pub-3986924419662120" data-ad-slot="3774348576">
+            <amp-ad layout="responsive" width="300" height="300" type="adsense" data-ad-client="ca-pub-3986924419662120"
+                data-ad-slot="3774348576">
             </amp-ad>
         </div>
         <div class="article--main-grid">
@@ -1765,8 +1764,7 @@
                                     $shareUrl = url("$catname/$slug");
                                 @endphp
                                 <li class="article--social-link">
-                                    <a href="http://www.facebook.com/sharer.php?u={{ $shareUrl }}"
-                                        target="_blank">
+                                    <a href="http://www.facebook.com/sharer.php?u={{ $shareUrl }}" target="_blank">
                                         <svg fill="black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
                                             width="20" height="20">
                                             <path fill="currentColor"
@@ -1799,8 +1797,8 @@
                     </div>
 
                     {{-- <a href="#article-comments-section" class="cmmt-button">
-                        <svg stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20"
-                            height="20" fill="none">
+                        <svg stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"
+                            fill="none">
                             <path
                                 d="M8 9h8M8 13h6M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z" />
                         </svg>
@@ -1813,8 +1811,8 @@
                     <div class="article--image-wrapper">
                         @if ($data['blog']->link)
                             @if (str_contains($data['blog']->link, 'youtube'))
-                                <amp-youtube data-videoid="{{ Str::afterLast($data['blog']->link, 'v=') }}"
-                                    layout="responsive" width="480" height="270">
+                                <amp-youtube data-videoid="{{ Str::afterLast($data['blog']->link, 'v=') }}" layout="responsive"
+                                    width="480" height="270">
                                 </amp-youtube>
                             @else
                                 <amp-video width="480" height="270" layout="responsive" controls>
@@ -1848,8 +1846,8 @@
                             <a href="https://www.facebook.com/officialnmfnews" target="_blank" rel="noopener"
                                 title="Facebook" class="socials-item">
                                 <!-- Facebook SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                    viewBox="0 0 320 512" class="facebook">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 320 512"
+                                    class="facebook">
                                     <path fill="currentColor"
                                         d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
                                 </svg>
@@ -1858,8 +1856,8 @@
                             <a href="https://x.com/NMFNewsOfficial" target="_blank" rel="noopener" title="Twitter"
                                 class="socials-item">
                                 <!-- Twitter/X SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                    viewBox="0 0 512 512" class="fa-x-twitter">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 512 512"
+                                    class="fa-x-twitter">
                                     <path fill="black"
                                         d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" />
                                 </svg>
@@ -1868,8 +1866,8 @@
                             <a href="https://instagram.com/nmfnewsofficial" target="_blank" rel="noopener"
                                 title="Instagram" class="socials-item">
                                 <!-- Instagram SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                    viewBox="0 0 448 512" class="instagram">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 448 512"
+                                    class="instagram">
                                     <path fill="currentColor"
                                         d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
                                 </svg>
@@ -1878,8 +1876,8 @@
                             <a href="https://www.youtube.com/c/NMFNews/featured" target="_blank" rel="noopener"
                                 title="YouTube" class="socials-item">
                                 <!-- YouTube SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                    viewBox="0 0 576 512" class="youtube">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 576 512"
+                                    class="youtube">
                                     <path fill="currentColor"
                                         d="M549.7 124.1c-6.3-23.7-24.8-42.3-48.3-48.6C458.8 64 288 64 288 64S117.2 64 74.6 75.5c-23.5 6.3-42 24.9-48.3 48.6-11.4 42.9-11.4 132.3-11.4 132.3s0 89.4 11.4 132.3c6.3 23.7 24.8 41.5 48.3 47.8C117.2 448 288 448 288 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zm-317.5 213.5V175.2l142.7 81.2-142.7 81.2z" />
                                 </svg>
@@ -1888,8 +1886,8 @@
                             <a href="https://whatsapp.com/channel/0029VajdZqv9xVJbRYtSFM3C" target="_blank"
                                 rel="noopener" title="WhatsApp" class="socials-item">
                                 <!-- WhatsApp SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
-                                    viewBox="0 0 448 512" class="whatsapp">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 448 512"
+                                    class="whatsapp">
                                     <path fill="currentColor"
                                         d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z" />
                                 </svg>
@@ -1901,64 +1899,64 @@
 
                 <!-- Article Content -->
                 <!-- Article Content -->
-<div class="readmore" [class]="ui.readMore ? 'readmore expanded' : 'readmore'">
-    <div class="article--content">
+                {{-- <div class="readmore" [class]="ui.readMore ? 'readmore expanded' : 'readmore'"> --}}
+                    <div class="article--content">
 
-@php
-// Get full content
-$description = $data['blog']->description ?? '';
+                        @php
+                            // Get full content
+                            $description = $data['blog']->description ?? '';
 
-// 1.  CLEAN INVALID AMP TAGS
-$description = preg_replace('/<(script|style|iframe|video|source|embed|object)[^>]*>.*?<\/\1>/si', '', $description);
-$description = preg_replace('/\sstyle=(\'|")(.*?)\1/i', '', $description);
+                            // 1.  CLEAN INVALID AMP TAGS
+                            $description = preg_replace('/<(script|style|iframe|video|source|embed|object)[^>]*>.*?<\/\1>/si', '', $description);
+                            $description = preg_replace('/\sstyle=(\'|")(.*?)\1/i', '', $description);
 
-// 2.CONVERT TWITTER BLOCKQUOTE → AMP-TWITTER
+                            // 2.CONVERT TWITTER BLOCKQUOTE → AMP-TWITTER
 
-$description = preg_replace_callback(
-    '/<blockquote[^>]*twitter[^>]*>.*?twitter\.com\/[^\/]+\/status\/(\d+).*?<\/blockquote>/is',
-    function ($m) {
-        $tweetId = $m[1];
-        return '<amp-twitter width="375" height="600" layout="responsive" data-tweetid="'.$tweetId.'"></amp-twitter>';
-    },
-    $description
-);
-//  3.  CONVERT RAW TWITTER/X LINKS → AMP
-$description = preg_replace_callback(
-    '/https?:\/\/(?:www\.)?(twitter\.com|x\.com)\/[^\/]+\/status\/(\d+)/i',
-    fn($m) => '<amp-twitter width="375" height="600" layout="responsive" data-tweetid="'.$m[2].'"></amp-twitter>',
-    $description
-);
+                            $description = preg_replace_callback(
+                                '/<blockquote[^>]*twitter[^>]*>.*?twitter\.com\/[^\/]+\/status\/(\d+).*?<\/blockquote>/is',
+                                function ($m) {
+                                    $tweetId = $m[1];
+                                    return '<amp-twitter width="375" height="600" layout="responsive" data-tweetid="' . $tweetId . '"></amp-twitter>';
+                                },
+                                $description
+                            );
+                            //  3.  CONVERT RAW TWITTER/X LINKS → AMP
+                            $description = preg_replace_callback(
+                                '/https?:\/\/(?:www\.)?(twitter\.com|x\.com)\/[^\/]+\/status\/(\d+)/i',
+                                fn($m) => '<amp-twitter width="375" height="600" layout="responsive" data-tweetid="' . $m[2] . '"></amp-twitter>',
+                                $description
+                            );
 
-// 4. CONVERT IMAGES → AMP-IMG
+                            // 4. CONVERT IMAGES → AMP-IMG
 
-$description = preg_replace_callback(
-    '/<img[^>]+>/i',
-    function ($match) {
-        preg_match('/src=["\']([^"\']+)["\']/', $match[0], $s);
-        $src = $s[1] ?? '';
-        return '<amp-img src="'.$src.'" width="600" height="400" layout="responsive"></amp-img>';
-    },
-    $description
-);
+                            $description = preg_replace_callback(
+                                '/<img[^>]+>/i',
+                                function ($match) {
+                                    preg_match('/src=["\']([^"\']+)["\']/', $match[0], $s);
+                                    $src = $s[1] ?? '';
+                                    return '<amp-img src="' . $src . '" width="600" height="400" layout="responsive"></amp-img>';
+                                },
+                                $description
+                            );
 
-// 5. CONVERT YOUTUBE LINKS → AMP-YOUTUBE
+                            // 5. CONVERT YOUTUBE LINKS → AMP-YOUTUBE
 
-$description = preg_replace_callback(
-    '/https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/',
-    fn($m) => '<amp-youtube data-videoid="'.$m[1].'" layout="responsive" width="480" height="270"></amp-youtube>',
-    $description
-);
-$description = preg_replace_callback(
-    '/https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/',
-    fn($m) => '<amp-youtube data-videoid="'.$m[1].'" layout="responsive" width="480" height="270"></amp-youtube>',
-    $description
-);
-@endphp
+                            $description = preg_replace_callback(
+                                '/https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/',
+                                fn($m) => '<amp-youtube data-videoid="' . $m[1] . '" layout="responsive" width="480" height="270"></amp-youtube>',
+                                $description
+                            );
+                            $description = preg_replace_callback(
+                                '/https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/',
+                                fn($m) => '<amp-youtube data-videoid="' . $m[1] . '" layout="responsive" width="480" height="270"></amp-youtube>',
+                                $description
+                            );
+                        @endphp
 
-<!-- ✅ FINAL OUTPUT -->
-<div class="amp-content">
-   {!! config('global.sanitize_amp_content')($data['blog']->description ?? '') !!}
-</div>
+                        <!-- ✅ FINAL OUTPUT -->
+                        <div class="amp-content">
+                            {!! config('global.sanitize_amp_content')($data['blog']->description ?? '') !!}
+                        </div>
 
 
                         <!-- WhatsApp Button -->
@@ -2006,9 +2004,8 @@ $description = preg_replace_callback(
 
                                 <!-- Middle Horizontal Ad -->
                                 <div class="article--ad-horizontal article--mt-30" style="text-align: center;">
-                                    <amp-ad width="100" height="320" type="adsense"
-                                        data-ad-client="ca-pub-3986924419662120" data-ad-slot="1770830325"
-                                        data-auto-format="rspv" data-full-width-responsive="true"
+                                    <amp-ad width="100" height="320" type="adsense" data-ad-client="ca-pub-3986924419662120"
+                                        data-ad-slot="1770830325" data-auto-format="rspv" data-full-width-responsive="true"
                                         layout="responsive">
                                     </amp-ad>
                                 </div>
@@ -2017,17 +2014,17 @@ $description = preg_replace_callback(
                     </div>
 
                     <!-- Fade effect - moved outside article--content but inside readmore -->
-                    <div class="readmore__fade" [hidden]="ui.readMore"></div>
-                </div>
+                    {{-- <div class="readmore__fade" [hidden]="ui.readMore"></div> --}}
+                    {{--
+                </div> --}}
 
                 <!-- Read More Actions -->
-                <div class="readmore__actions">
-                    <button class="readmore__btn" on="tap:AMP.setState({ui: {readMore: true}})"
-                        [hidden]="ui.readMore">
+                {{-- <div class="readmore__actions">
+                    <button class="readmore__btn" on="tap:AMP.setState({ui: {readMore: true}})" [hidden]="ui.readMore">
                         Read more
                     </button>
 
-                </div>
+                </div> --}}
             </div>
             <footer class="footer_main">
                 <div class="cm-container">
@@ -2041,8 +2038,7 @@ $description = preg_replace_callback(
                                         alt="" />
                                 </a>
                                 <div class="footer_logo">
-                                    <img src="{{ config('global.base_url_asset') }}asset/images/kmc_logo.png"
-                                        alt="">
+                                    <img src="{{ config('global.base_url_asset') }}asset/images/kmc_logo.png" alt="">
                                 </div>
                             </div>
                             <p>NMF News is a Subsidary of Khetan Media Creation Pvt Ltd</p>
@@ -2080,16 +2076,15 @@ $description = preg_replace_callback(
                             <div class="footer_col">
                                 <h4>Category</h4>
                                 <?php
-                                $footer_menus = App\Models\Menu::where('menu_id', 0)->where('status', 1)->where('type_id', '1')->where('category_id', '2')->limit(8)->get();
-                                $chunks = $footer_menus->chunk(4);
+$footer_menus = App\Models\Menu::where('menu_id', 0)->where('status', 1)->where('type_id', '1')->where('category_id', '2')->limit(8)->get();
+$chunks = $footer_menus->chunk(4);
                                 ?>
                                 <ul class="footer_menu">
                                     @foreach ($chunks as $chunk)
                                         <div class="footer_ct">
                                             @foreach ($chunk as $footer_menu)
                                                 <li class="footer_item">
-                                                    <a
-                                                        href="{{ $footer_menu->menu_link }}">{{ $footer_menu->menu_name }}</a>
+                                                    <a href="{{ $footer_menu->menu_link }}">{{ $footer_menu->menu_name }}</a>
                                                 </li>
                                             @endforeach
                                         </div>
@@ -2113,8 +2108,7 @@ $description = preg_replace_callback(
                                         <span class="text-2">Google Play</span>
                                     </span>
                                 </a>
-                                <a href="https://apps.apple.com/us/app/nmf-news/id6745018964"
-                                    class="playstore-button">
+                                <a href="https://apps.apple.com/us/app/nmf-news/id6745018964" class="playstore-button">
                                     <svg viewBox="0 0 512 512" class="_icon" fill="currentColor"
                                         xmlns="http://www.w3.org/2000/svg" style="margin-right: -7px;">
                                         <path
@@ -2158,4 +2152,5 @@ $description = preg_replace_callback(
             </footer>
             <amp-analytics id="scroll-hitcount" type="gtag" data-credentials="include">
 </body>
+
 </html>
