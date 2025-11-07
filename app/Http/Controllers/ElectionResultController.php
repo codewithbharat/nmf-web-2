@@ -220,7 +220,7 @@ public function saveVoteCount(Request $request)
     if ($totalSeats > 243) {
         return redirect()->back()
             ->withInput()
-            ->with('error', 'jjjYou have exceeded by ' . ($totalSeats - 243) . ' seats.');
+            ->with('error', 'You have exceeded by ' . ($totalSeats - 243) . ' seats.');
 
     }
 
@@ -233,8 +233,13 @@ public function saveVoteCount(Request $request)
             $party->save();
         }
     }
-
-    return redirect()->back()->with('success', 'Vote counts updated successfully!');
+try {
+            app(\App\Services\ExportHome::class)->run();
+        } catch (\Throwable $e) {
+             Log::error('ExportHome failed', ['error' => $e->getMessage()]);
+        }
+    // return redirect()->back()->with('success', 'Vote counts updated successfully!');
+     return redirect(config('global.base_url').'election/manage-vote-count')->with('success', 'Vote counts updated successfully!');
 }
 
 public function manageSeats()
@@ -292,7 +297,13 @@ public function saveTopSeats(Request $request)
     }
 
     // --- MODIFIED ---
-    return redirect()->back()->with('success', ' Seats and sequence updated successfully!');
+    try {
+            app(\App\Services\ExportHome::class)->run();
+        } catch (\Throwable $e) {
+            Log::error('ExportHome failed', ['error' => $e->getMessage()]);
+        }
+     return redirect(config('global.base_url').'election/manage-top-party-seats')->with('success', 'Seats and Sequence updated successfully!');
+    // return redirect()->back()->with('success', ' Seats and sequence updated successfully!');
 }
 
 // public function voteCountList()
