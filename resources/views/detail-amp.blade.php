@@ -1528,16 +1528,16 @@
         on-error-remove-class="noto-sans-loading" on-load-add-class="noto-sans-loaded">
     </amp-font>
     <?php
-
-$menus = App\Models\Menu::whereRelation('type', 'type', 'Header')
-    ->whereRelation('category', 'category', 'User')
-    ->where([['status', '1'], ['menu_id', 0]])
-    ->whereNotNull('sequence_id')
-    ->where('sequence_id', '!=', 0)
-    ->orderBy('sequence_id', 'asc')
-    ->get()
-    ->take(11)
-    ->toArray();
+    
+    $menus = App\Models\Menu::whereRelation('type', 'type', 'Header')
+        ->whereRelation('category', 'category', 'User')
+        ->where([['status', '1'], ['menu_id', 0]])
+        ->whereNotNull('sequence_id')
+        ->where('sequence_id', '!=', 0)
+        ->orderBy('sequence_id', 'asc')
+        ->get()
+        ->take(11)
+        ->toArray();
     ?>
     <header class="--header-amp">
         <div class="cm-container">
@@ -1567,7 +1567,8 @@ $menus = App\Models\Menu::whereRelation('type', 'type', 'Header')
 
 
                             <small class="Headertag m-0 htag" style="margin-left: 0px;white-space: nowrap;"> <span
-                                    class="" style="color: #fff;">जिस पर देश</span><span class="HeadertagHalf">करता है
+                                    class="" style="color: #fff;">जिस पर देश</span><span
+                                    class="HeadertagHalf">करता है
                                     भरोसा</span> </small>
                         </div>
 
@@ -1588,36 +1589,37 @@ $menus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                                 </div>
 
                                 <?php
-// Define category-to-icon mapping
-$categoryIcons = [
-    'न्यूज' => 'fa-solid fa-newspaper',
-    'राज्य' => 'fa-solid fa-landmark',
-    'एक्सक्लूसिव' => 'fa-solid fa-star',
-    'खेल' => 'fa-solid fa-futbol',
-    'मनोरंजन' => 'fa-solid fa-film',
-    'धर्म ज्ञान' => 'fa-solid fa-om',
-    'टेक्नोलॉजी' => 'fa-solid fa-microchip',
-    'लाइफस्टाइल' => 'fa-solid fa-heart',
-    'पॉडकास्ट' => 'fa-solid fa-podcast',
-    'दुनिया' => 'fa-solid fa-globe',
-    'विधान सभा चुनाव' => 'fa-solid fa-vote-yea',
-];
-//$toggleMenus = App\Models\Menu::where('menu_id', 0)->where('status', 1)->where('type_id', '1')->where('category_id', '2')->get();
-//$toggleMenus = App\Models\Menu::where('menu_id', 0)->get();
-$toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
-    ->whereRelation('category', 'category', 'User')
-    ->where([['status', '1'], ['menu_id', 0]])
-    ->whereNotNull('sequence_id')
-    ->where('sequence_id', '!=', 0)
-    ->orderBy('sequence_id', 'asc')
-    ->get();
+                                // Define category-to-icon mapping
+                                $categoryIcons = [
+                                    'न्यूज' => 'fa-solid fa-newspaper',
+                                    'राज्य' => 'fa-solid fa-landmark',
+                                    'एक्सक्लूसिव' => 'fa-solid fa-star',
+                                    'खेल' => 'fa-solid fa-futbol',
+                                    'मनोरंजन' => 'fa-solid fa-film',
+                                    'धर्म ज्ञान' => 'fa-solid fa-om',
+                                    'टेक्नोलॉजी' => 'fa-solid fa-microchip',
+                                    'लाइफस्टाइल' => 'fa-solid fa-heart',
+                                    'पॉडकास्ट' => 'fa-solid fa-podcast',
+                                    'दुनिया' => 'fa-solid fa-globe',
+                                    'विधान सभा चुनाव' => 'fa-solid fa-vote-yea',
+                                ];
+                                //$toggleMenus = App\Models\Menu::where('menu_id', 0)->where('status', 1)->where('type_id', '1')->where('category_id', '2')->get();
+                                //$toggleMenus = App\Models\Menu::where('menu_id', 0)->get();
+                                $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
+                                    ->whereRelation('category', 'category', 'User')
+                                    ->where([['status', '1'], ['menu_id', 0]])
+                                    ->whereNotNull('sequence_id')
+                                    ->where('sequence_id', '!=', 0)
+                                    ->orderBy('sequence_id', 'asc')
+                                    ->get();
                                 ?>
 
                                 <ul class="modalmenu">
                                     @foreach ($toggleMenus as $menu)
                                         <li class="modal_item">
                                             <a href="{{ asset($menu->menu_link) }}">
-                                                <i class="{{ $categoryIcons[$menu->menu_name] ?? 'fa-solid fa-link' }}"></i>
+                                                <i
+                                                    class="{{ $categoryIcons[$menu->menu_name] ?? 'fa-solid fa-link' }}"></i>
                                                 {{ $menu->menu_name }}
                                                 @php
                                                     $subMenus = App\Models\Menu::where('menu_id', $menu->id)
@@ -1705,8 +1707,8 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
 
         <!-- Header Ad -->
         <div class="ad-container">
-            <amp-ad layout="responsive" width="300" height="300" type="adsense" data-ad-client="ca-pub-3986924419662120"
-                data-ad-slot="3774348576">
+            <amp-ad layout="responsive" width="300" height="300" type="adsense"
+                data-ad-client="ca-pub-3986924419662120" data-ad-slot="3774348576">
             </amp-ad>
         </div>
         <div class="article--main-grid">
@@ -1764,7 +1766,8 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                                     $shareUrl = url("$catname/$slug");
                                 @endphp
                                 <li class="article--social-link">
-                                    <a href="http://www.facebook.com/sharer.php?u={{ $shareUrl }}" target="_blank">
+                                    <a href="http://www.facebook.com/sharer.php?u={{ $shareUrl }}"
+                                        target="_blank">
                                         <svg fill="black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
                                             width="20" height="20">
                                             <path fill="currentColor"
@@ -1811,8 +1814,8 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                     <div class="article--image-wrapper">
                         @if ($data['blog']->link)
                             @if (str_contains($data['blog']->link, 'youtube'))
-                                <amp-youtube data-videoid="{{ Str::afterLast($data['blog']->link, 'v=') }}" layout="responsive"
-                                    width="480" height="270">
+                                <amp-youtube data-videoid="{{ Str::afterLast($data['blog']->link, 'v=') }}"
+                                    layout="responsive" width="480" height="270">
                                 </amp-youtube>
                             @else
                                 <amp-video width="480" height="270" layout="responsive" controls>
@@ -1846,8 +1849,8 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                             <a href="https://www.facebook.com/officialnmfnews" target="_blank" rel="noopener"
                                 title="Facebook" class="socials-item">
                                 <!-- Facebook SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 320 512"
-                                    class="facebook">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox="0 0 320 512" class="facebook">
                                     <path fill="currentColor"
                                         d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
                                 </svg>
@@ -1856,8 +1859,8 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                             <a href="https://x.com/NMFNewsOfficial" target="_blank" rel="noopener" title="Twitter"
                                 class="socials-item">
                                 <!-- Twitter/X SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 512 512"
-                                    class="fa-x-twitter">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox="0 0 512 512" class="fa-x-twitter">
                                     <path fill="black"
                                         d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" />
                                 </svg>
@@ -1866,8 +1869,8 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                             <a href="https://instagram.com/nmfnewsofficial" target="_blank" rel="noopener"
                                 title="Instagram" class="socials-item">
                                 <!-- Instagram SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 448 512"
-                                    class="instagram">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox="0 0 448 512" class="instagram">
                                     <path fill="currentColor"
                                         d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
                                 </svg>
@@ -1876,8 +1879,8 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                             <a href="https://www.youtube.com/c/NMFNews/featured" target="_blank" rel="noopener"
                                 title="YouTube" class="socials-item">
                                 <!-- YouTube SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 576 512"
-                                    class="youtube">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox="0 0 576 512" class="youtube">
                                     <path fill="currentColor"
                                         d="M549.7 124.1c-6.3-23.7-24.8-42.3-48.3-48.6C458.8 64 288 64 288 64S117.2 64 74.6 75.5c-23.5 6.3-42 24.9-48.3 48.6-11.4 42.9-11.4 132.3-11.4 132.3s0 89.4 11.4 132.3c6.3 23.7 24.8 41.5 48.3 47.8C117.2 448 288 448 288 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zm-317.5 213.5V175.2l142.7 81.2-142.7 81.2z" />
                                 </svg>
@@ -1886,8 +1889,8 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                             <a href="https://whatsapp.com/channel/0029VajdZqv9xVJbRYtSFM3C" target="_blank"
                                 rel="noopener" title="WhatsApp" class="socials-item">
                                 <!-- WhatsApp SVG -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 448 512"
-                                    class="whatsapp">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox="0 0 448 512" class="whatsapp">
                                     <path fill="currentColor"
                                         d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z" />
                                 </svg>
@@ -1900,122 +1903,136 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                 <!-- Article Content -->
                 <!-- Article Content -->
                 {{-- <div class="readmore" [class]="ui.readMore ? 'readmore expanded' : 'readmore'"> --}}
-                    <div class="article--content">
-
-                        @php
-                            // Get full content
-                            $description = $data['blog']->description ?? '';
-
-                            // 1.  CLEAN INVALID AMP TAGS
-                            $description = preg_replace('/<(script|style|iframe|video|source|embed|object)[^>]*>.*?<\/\1>/si', '', $description);
-                            $description = preg_replace('/\sstyle=(\'|")(.*?)\1/i', '', $description);
-
-                            // 2.CONVERT TWITTER BLOCKQUOTE → AMP-TWITTER
-
-                            $description = preg_replace_callback(
-                                '/<blockquote[^>]*twitter[^>]*>.*?twitter\.com\/[^\/]+\/status\/(\d+).*?<\/blockquote>/is',
-                                function ($m) {
-                                    $tweetId = $m[1];
-                                    return '<amp-twitter width="375" height="600" layout="responsive" data-tweetid="' . $tweetId . '"></amp-twitter>';
-                                },
-                                $description
-                            );
-                            //  3.  CONVERT RAW TWITTER/X LINKS → AMP
-                            $description = preg_replace_callback(
-                                '/https?:\/\/(?:www\.)?(twitter\.com|x\.com)\/[^\/]+\/status\/(\d+)/i',
-                                fn($m) => '<amp-twitter width="375" height="600" layout="responsive" data-tweetid="' . $m[2] . '"></amp-twitter>',
-                                $description
-                            );
-
-                            // 4. CONVERT IMAGES → AMP-IMG
-
-                            $description = preg_replace_callback(
-                                '/<img[^>]+>/i',
-                                function ($match) {
-                                    preg_match('/src=["\']([^"\']+)["\']/', $match[0], $s);
-                                    $src = $s[1] ?? '';
-                                    return '<amp-img src="' . $src . '" width="600" height="400" layout="responsive"></amp-img>';
-                                },
-                                $description
-                            );
-
-                            // 5. CONVERT YOUTUBE LINKS → AMP-YOUTUBE
-
-                            $description = preg_replace_callback(
-                                '/https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/',
-                                fn($m) => '<amp-youtube data-videoid="' . $m[1] . '" layout="responsive" width="480" height="270"></amp-youtube>',
-                                $description
-                            );
-                            $description = preg_replace_callback(
-                                '/https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/',
-                                fn($m) => '<amp-youtube data-videoid="' . $m[1] . '" layout="responsive" width="480" height="270"></amp-youtube>',
-                                $description
-                            );
-                        @endphp
-
-                        <!-- ✅ FINAL OUTPUT -->
-                        <div class="amp-content">
-                            {!! config('global.sanitize_amp_content')($data['blog']->description ?? '') !!}
-                        </div>
-
-
-                        <!-- WhatsApp Button -->
-                        <div class="wp-btn">
-                            <a href="https://whatsapp.com/channel/0029VajdZqv9xVJbRYtSFM3C"
-                                class="article--whatsapp-button" target="_blank">
-                                व्हॉट्सऐप चैनल से जुड़ें
-                                <svg viewBox="0 0 48 48" y="0px" x="0px" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z"
-                                        fill="#fff"></path>
-                                    <path
-                                        d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z"
-                                        fill="#fff"></path>
-                                    <path
-                                        d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z"
-                                        fill="#cfd8dc"></path>
-                                    <path
-                                        d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z"
-                                        fill="#40c351"></path>
-                                    <path clip-rule="evenodd"
-                                        d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z"
-                                        fill-rule="evenodd" fill="#fff"></path>
-                                </svg>
-                            </a>
-                        </div>
-                        <div class="ad-container">
-                            <amp-ad layout="responsive" width="300" height="250" type="adsense"
-                                data-ad-client="ca-pub-3986924419662120" data-ad-slot="2615238860">
-                            </amp-ad>
-                        </div>
-                        <!-- Tags Section -->
-                        @if (!empty($data['blog']->tags))
-                            <section class="article--tags-section">
-                                <h3 class="article--tags-title">Tags</h3>
-                                <div class="article--tags-container">
-                                    @foreach (explode(',', $data['blog']->tags) as $tag)
-                                        @if (trim($tag) !== '')
-                                            <a href="{{ url('/search?search=' . trim($tag)) }}" class="article--tag">
-                                                {{ trim($tag) }}
-                                            </a>
-                                        @endif
-                                    @endforeach
-                                </div>
-
-                                <!-- Middle Horizontal Ad -->
-                                <div class="article--ad-horizontal article--mt-30" style="text-align: center;">
-                                    <amp-ad width="100" height="320" type="adsense" data-ad-client="ca-pub-3986924419662120"
-                                        data-ad-slot="1770830325" data-auto-format="rspv" data-full-width-responsive="true"
-                                        layout="responsive">
-                                    </amp-ad>
-                                </div>
-                            </section>
-                        @endif
+                <div class="article--content">
+                    <!-- ✅ FINAL OUTPUT -->
+                    <div class="amp-content">
+                        {!! config('global.sanitize_amp_content')($data['blog']->description ?? '') !!}
                     </div>
+                    @php
+                        // Get full content
+                        $description = $data['blog']->description ?? '';
+                        // ------------------
+                        $paragraphs = preg_split(
+                            '/(<\/p>)/i',
+                            $description,
+                            -1,
+                            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY,
+                        );
+                        $pCount = preg_match_all('/<p[^>]*>.*?<\/p>/is', $description);
+                        $divCount = preg_match_all('/<div[^>]*>.*?<\/div>/is', $description);
 
-                    <!-- Fade effect - moved outside article--content but inside readmore -->
-                    {{-- <div class="readmore__fade" [hidden]="ui.readMore"></div> --}}
-                    {{--
+                        $blockCount = $pCount + $divCount;
+                        $injectionIndex = $blockCount > 1 ? $blockCount - 1 : 0;
+                        $injected = false;
+                        $count = 0;
+
+                        // Helper: detect if block is pseudo-heading (<p><strong>...</strong></p> only)
+                        function isPseudoHeading($html)
+                        {
+                            return preg_match('/^<p[^>]*>\s*<strong>.*<\/strong>\s*<\/p>$/is', trim($html));
+                        }
+                    @endphp
+
+                    @if ($injectionIndex === 0)
+                        @if (!empty($data['latests']) && $data['latests']->isNotEmpty())
+                            @include('components.related-articles', [
+                                'articles' => $data['latests'],
+                            ])
+                        @endif
+                        @php $injected = true; @endphp
+                    @endif
+
+                    @foreach ($paragraphs as $block)
+
+                        @if (preg_match('/<\/p>/i', $block))
+                            @php $count++; @endphp
+
+                            @if (!$injected && $count === $injectionIndex)
+                                {{-- If this block is a pseudo-heading, inject BEFORE it --}}
+                                @if (isPseudoHeading($block))
+                                    @if (!empty($data['latests']) && $data['latests']->isNotEmpty())
+                                        @include('components.related-articles', [
+                                            'articles' => $data['latests'],
+                                        ])
+                                    @endif
+                                    @php $injected = true; @endphp
+                                @else
+                                    @if (!empty($data['latests']) && $data['latests']->isNotEmpty())
+                                        @include('components.related-articles', [
+                                            'articles' => $data['latests'],
+                                        ])
+                                    @endif
+                                    @php $injected = true; @endphp
+                                @endif
+                            @endif
+                        @endif
+                    @endforeach
+                    @if (!$injected)
+                        @if (!empty($data['latests']) && $data['latests']->isNotEmpty())
+                            @include('components.related-articles', [
+                                'articles' => $data['latests'],
+                            ])
+                        @endif
+                    @endif
+
+
+                    <!-- WhatsApp Button -->
+                    <div class="wp-btn">
+                        <a href="https://whatsapp.com/channel/0029VajdZqv9xVJbRYtSFM3C"
+                            class="article--whatsapp-button" target="_blank">
+                            व्हॉट्सऐप चैनल से जुड़ें
+                            <svg viewBox="0 0 48 48" y="0px" x="0px" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z"
+                                    fill="#fff"></path>
+                                <path
+                                    d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z"
+                                    fill="#fff"></path>
+                                <path
+                                    d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z"
+                                    fill="#cfd8dc"></path>
+                                <path
+                                    d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z"
+                                    fill="#40c351"></path>
+                                <path clip-rule="evenodd"
+                                    d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z"
+                                    fill-rule="evenodd" fill="#fff"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="ad-container">
+                        <amp-ad layout="responsive" width="300" height="250" type="adsense"
+                            data-ad-client="ca-pub-3986924419662120" data-ad-slot="2615238860">
+                        </amp-ad>
+                    </div>
+                    <!-- Tags Section -->
+                    @if (!empty($data['blog']->tags))
+                        <section class="article--tags-section">
+                            <h3 class="article--tags-title">Tags</h3>
+                            <div class="article--tags-container">
+                                @foreach (explode(',', $data['blog']->tags) as $tag)
+                                    @if (trim($tag) !== '')
+                                        <a href="{{ url('/search?search=' . trim($tag)) }}" class="article--tag">
+                                            {{ trim($tag) }}
+                                        </a>
+                                    @endif
+                                @endforeach
+                            </div>
+
+                            <!-- Middle Horizontal Ad -->
+                            <div class="article--ad-horizontal article--mt-30" style="text-align: center;">
+                                <amp-ad width="100" height="320" type="adsense"
+                                    data-ad-client="ca-pub-3986924419662120" data-ad-slot="1770830325"
+                                    data-auto-format="rspv" data-full-width-responsive="true" layout="responsive">
+                                </amp-ad>
+                            </div>
+                        </section>
+                    @endif
+                </div>
+
+                <!-- Fade effect - moved outside article--content but inside readmore -->
+                {{-- <div class="readmore__fade" [hidden]="ui.readMore"></div> --}}
+                {{--
                 </div> --}}
 
                 <!-- Read More Actions -->
@@ -2038,7 +2055,8 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                                         alt="" />
                                 </a>
                                 <div class="footer_logo">
-                                    <img src="{{ config('global.base_url_asset') }}asset/images/kmc_logo.png" alt="">
+                                    <img src="{{ config('global.base_url_asset') }}asset/images/kmc_logo.png"
+                                        alt="">
                                 </div>
                             </div>
                             <p>NMF News is a Subsidary of Khetan Media Creation Pvt Ltd</p>
@@ -2076,15 +2094,16 @@ $toggleMenus = App\Models\Menu::whereRelation('type', 'type', 'Header')
                             <div class="footer_col">
                                 <h4>Category</h4>
                                 <?php
-$footer_menus = App\Models\Menu::where('menu_id', 0)->where('status', 1)->where('type_id', '1')->where('category_id', '2')->limit(8)->get();
-$chunks = $footer_menus->chunk(4);
+                                $footer_menus = App\Models\Menu::where('menu_id', 0)->where('status', 1)->where('type_id', '1')->where('category_id', '2')->limit(8)->get();
+                                $chunks = $footer_menus->chunk(4);
                                 ?>
                                 <ul class="footer_menu">
                                     @foreach ($chunks as $chunk)
                                         <div class="footer_ct">
                                             @foreach ($chunk as $footer_menu)
                                                 <li class="footer_item">
-                                                    <a href="{{ $footer_menu->menu_link }}">{{ $footer_menu->menu_name }}</a>
+                                                    <a
+                                                        href="{{ $footer_menu->menu_link }}">{{ $footer_menu->menu_name }}</a>
                                                 </li>
                                             @endforeach
                                         </div>
@@ -2108,7 +2127,8 @@ $chunks = $footer_menus->chunk(4);
                                         <span class="text-2">Google Play</span>
                                     </span>
                                 </a>
-                                <a href="https://apps.apple.com/us/app/nmf-news/id6745018964" class="playstore-button">
+                                <a href="https://apps.apple.com/us/app/nmf-news/id6745018964"
+                                    class="playstore-button">
                                     <svg viewBox="0 0 512 512" class="_icon" fill="currentColor"
                                         xmlns="http://www.w3.org/2000/svg" style="margin-right: -7px;">
                                         <path
