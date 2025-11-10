@@ -1893,8 +1893,8 @@
                 <div class="article--media">
                     <div class="article--image-wrapper">
                         @if ($data['blog']->link)
-                            @if (str_contains($data['blog']->link, 'youtube'))
-                                <amp-youtube data-videoid="{{ Str::afterLast($data['blog']->link, 'v=') }}"
+                            @if (!empty($data['youtubeVideoId']))
+                                <amp-youtube data-videoid="{{ $data['youtubeVideoId'] }}"
                                     layout="responsive" width="480" height="270">
                                 </amp-youtube>
                             @else
