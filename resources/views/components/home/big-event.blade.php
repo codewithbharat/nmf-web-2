@@ -11,6 +11,44 @@
     cursor: pointer;
     z-index: 10;
 }
+
+.live_tag3 {
+    position: relative;
+    font-weight: 700;
+    display: inline-block;
+    margin-right: -5px;
+    padding: 6px 26px 0px 0px;
+    color: #ff323b;
+    border-radius: 8px;
+    font-size: sans-serif;
+}
+
+.live_tag3::after {
+    position: absolute;
+    content: "";
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    right: 10.1px;
+    margin-left: 5px;
+    top: 10px;
+    background-color: #ff1a1a;
+    animation: pulse2 1s 
+linear infinite;
+}
+
+.live_tag3::before
+ {
+    position: absolute;
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    right: 10.85px;
+    top: 11px;
+    background-color: #ff3737;
+    z-index: 2;
+}
 </style>
 
 @if ($bigEvent)
@@ -221,7 +259,12 @@ $bigEvent->load(['blogs' => function ($q) {
                                 <img src="{{ asset( $image_url ) }}" 
                                     alt="{{ $blog->name }}" loading="lazy">
                             </div>
-                            <h5 class="bb-text">{{ $blog->name }}</h5>
+                          
+                            <h5 class="bb-text">
+                                @if ($blog->isLive === 1)
+                                    <span class="live_tag3">LIVE <span></span></span>
+                                @endif
+                                {{ $blog->name }}</h5>
                         </a>
                     </article>
                 @endforeach
