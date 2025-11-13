@@ -8,6 +8,8 @@ use App\Models\Blog;
 use App\Models\WebStories;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Video;
+use App\Models\Clip;
 
 class SitemapController extends Controller
 {
@@ -122,5 +124,55 @@ class SitemapController extends Controller
         return response()->view('news-sitemap', compact('blogs'))
                         ->header('Content-Type', 'application/xml');
     }
+public function videoSitemap()
+{
+    $urls = [];
+
+    $videos = Video::where('is_active', 1)
+        ->with('category')
+        ->orderBy('created_at', 'desc')
+        ->take(100)
+        ->get();
+
+    foreach ($videos as $video) {
+        if (!$video->category) continue;
+
+        $urls[] = [
+            'loc' => url('/videos/' . $video->category->site_url . '/' . $video->site_url),
+            'lastmod' => $video->updated_at,
+            'priority' => '0.5',
+        ];
+    }
+
+    return response()
+        ->view('video-sitemap', compact('urls'))
+        ->header('Content-Type', 'application/xml');
+}
+
+public function reelVideoSitemap()
+{
+    $urls = [];
+
+    $clips = \App\Models\Clip::where('status', 1)
+        ->with('category')
+        ->orderBy('created_at', 'desc')
+        ->take(100)
+        ->get();
+
+    foreach ($clips as $clip) {
+        if (!$clip->category) continue;
+
+        $urls[] = [
+            'loc' => url('/reels/' . $clip->category->site_url . '/' . $clip->site_url),
+            'lastmod' => $clip->updated_at,
+            'priority' => '0.5',
+        ];
+    }
+
+    return response()
+        ->view('reel-sitemap', compact('urls'))
+        ->header('Content-Type', 'application/xml');
+}
+
 
  }

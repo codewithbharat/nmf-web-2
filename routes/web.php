@@ -440,6 +440,10 @@ Route::get('/webstories-sitemap.xml', [SitemapController::class, 'webstoriesSite
 Route::get('/articles-sitemap.xml', [SitemapController::class, 'sitemapIndex']);
 Route::get('/sitemap/generic-articles-{date}.xml', [SitemapController::class, 'dailySitemap'])
      ->where('date', '\d{4}-\d{2}-\d{2}');
+Route::get('/sitemap-videos.xml', [SitemapController::class, 'videoSitemap']);
+Route::get('/sitemap-reels.xml', [SitemapController::class, 'reelVideoSitemap']);
+
+
 Route::get('/feed', [RSSFeedController::class, 'index']);
 Route::get('/home-videos', [VideoController::class, 'HomepageVideo'])->name('HomepageVideo');
 Route::get('/menusequence', [MenuSequenceController::class, 'index'])->name('getmenusequence');
