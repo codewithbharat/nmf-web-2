@@ -65,8 +65,8 @@ $metaDescription = preg_replace('/\s+/', ' ', $metaDescription);
     $home = rtrim(config('global.base_url_frontend'), '/');
     $canonicalUrl = str_replace('/amp', '/', url()->current());
     ?>
-    @if ($current == $home)
-        <link rel="canonical" href="{{ config('global.base_url_frontend') }}">
+    @if ($current != $home)
+        <link rel="canonical" href="{{ $home }}">
     @else
         <link rel="canonical" href="{{ $canonicalUrl }}">
     @endif

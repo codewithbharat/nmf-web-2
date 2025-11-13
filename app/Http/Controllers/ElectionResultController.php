@@ -220,7 +220,7 @@ public function saveVoteCount(Request $request)
     if ($totalSeats > 243) {
         return redirect()->back()
             ->withInput()
-            ->with('error', 'You have exceeded by ' . ($totalSeats - 243) . ' seats.');
+            ->with('error', 'jjjYou have exceeded by ' . ($totalSeats - 243) . ' seats.');
 
     }
 
@@ -233,13 +233,14 @@ public function saveVoteCount(Request $request)
             $party->save();
         }
     }
+
 try {
             app(\App\Services\ExportHome::class)->run();
         } catch (\Throwable $e) {
-             Log::error('ExportHome failed', ['error' => $e->getMessage()]);
+            Log::error('ExportHome failed', ['error' => $e->getMessage()]);
         }
-   // return redirect()->back()->with('success', 'Vote counts updated successfully!');
-    return redirect(config('global.base_url').'election/manage-vote-count')->with('success', 'Vote counts updated successfully!');
+
+    return redirect()->back()->with('success', 'Vote counts updated successfully!');
 }
 
 public function manageSeats()
@@ -297,12 +298,12 @@ public function saveTopSeats(Request $request)
     }
 
     // --- MODIFIED ---
-    try {
+   try {
             app(\App\Services\ExportHome::class)->run();
         } catch (\Throwable $e) {
             Log::error('ExportHome failed', ['error' => $e->getMessage()]);
         }
-     return redirect(config('global.base_url').'election/manage-top-party-seats')->with('success', 'Seats and Sequence updated successfully!');
+     return redirect(config('global.base_url').'election/manage-top-party-seats')->with('success', 'Seats updated successfully!');
     // return redirect()->back()->with('success', ' Seats and sequence updated successfully!');
 }
 
@@ -343,7 +344,7 @@ public function exitpoll()
         $party->save();
     }
  
-    $totalSeats = 0;  //total of seats_won
+   /* $totalSeats = 0;  //total of seats_won
  
     // Step 1: Calculate new total (sum of all submitted seat values)
     foreach ($parties as $party) {
@@ -358,7 +359,7 @@ public function exitpoll()
             ->withInput()
             ->with('error', 'You have exceeded by ' . ($totalSeats - 243) . ' seats.');
  
-    }
+    } */
  
     // Step 3: Save data if within limit
     foreach ($parties as $party) {
@@ -368,7 +369,7 @@ public function exitpoll()
             $party->exit_poll = $request->input($inputName);
             $party->save();
         }
-    }
+    } 
      try {
             app(\App\Services\ExportHome::class)->run();
         } catch (\Throwable $e) {
@@ -380,4 +381,3 @@ public function exitpoll()
 
 
 }
-
