@@ -91,136 +91,214 @@
 
 <body style="min-height: 100%; display: flex; flex-direction: column; margin-top: auto; margin-top: 50px;">
 
-    <section
-        style="display: flex; flex-direction: column; gap: 20px; justify-content: center;  margin: auto; width: 100%;">
-        @include('components.election-live-section')
-        @include('components.election-maha-section')
+  <section
+    style="display: flex; flex-direction: column; gap: 20px; justify-content: center;  margin: auto; width: 100%;">
+    
+    {{-- **THIS WRAPPER IS REQUIRED FOR THE REFRESH** --}}
+    <div id="election-live-wrapper">
+        @include('partials._election-live-section')
+    </div>
 
-    </section>
+    <div id="maha-section-wrapper">
+        {{-- This loads the component on the initial page load --}}
+        @include('partials._maha-section')
+    </div>
 
-    <script>
-        // 1. Handle Swiper for Maha-Mukabla
-        // (This part was extracted from your main script block)
-        const mhCarousel = document.querySelector('.mh-carousel');
-        if (mhCarousel) {
-            new Swiper('.mh-carousel', {
-                loop: true,
-                navigation: {
-                    nextEl: '.mh-button-next',
-                    prevEl: '.mh-button-prev',
-                },
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                },
-            });
+</section>
+
+    {{-- 
+      * Correction 2:
+      * Combined both script blocks into one.
+      * This new script correctly re-initializes BOTH the Swiper and the Chart
+      * every time the section refreshes.
+    --}}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        // --- 1. REGISTER CHART PLUGIN (Run once) ---
+        if (window.Chart && window.ChartDataLabels && !Chart._nmfDataLabelsRegistered) {
+            Chart.register(ChartDataLabels);
+            Chart._nmfDataLabelsRegistered = true;
         }
 
-        // 2. Run all chart code on DOMContentLoaded
-        document.addEventListener("DOMContentLoaded", function() {
+        // --- 2. FUNCTION TO CREATE CHART ---
+        function createSemiCircleChart(canvasId, results, options = {}) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return null; // Safely skip if canvas not found
 
-            // ---------------- REGISTER CHART PLUGIN (Run once) ----------------
-            if (window.Chart && window.ChartDataLabels && !Chart._nmfDataLabelsRegistered) {
-                Chart.register(ChartDataLabels);
-                Chart._nmfDataLabelsRegistered = true;
+            // Destroy existing chart instance if it exists
+            if (canvas._chartInstance) {
+                try {
+                    canvas._chartInstance.destroy();
+                } catch (e) {}
+                canvas._chartInstance = null;
             }
 
-            // ---------------- SEMI-CIRCLE CHART FUNCTION ----------------
-            // (This function is required by the component)
-            function createSemiCircleChart(canvasId, results, options = {}) {
-                const canvas = document.getElementById(canvasId);
-                if (!canvas) return null; // Safely skip if canvas not found
+            const filteredResults = results.filter(r => r.abbreviation.toLowerCase() !== 'ljp');
+            const labels = filteredResults.map(r => r.party_name);
+            const values = filteredResults.map(r => r.seats_won);
+            const colorMap = {
+                'nda': '#fd6101',
+                'rjd': '#13B605',
+                'jsp': '#FABB00',
+                'oth': '#D13A37'
+            };
+            const colors = filteredResults.map(r => colorMap[r.abbreviation.toLowerCase()] || '#13B605');
+            const aspectRatio = (typeof options.aspectRatio !== 'undefined') ?
+                options.aspectRatio :
+                (window.innerWidth < 768 ? 1 : 1.5);
 
-                // Destroy existing chart instance if it exists
-                if (canvas._chartInstance) {
-                    try {
-                        canvas._chartInstance.destroy();
-                    } catch (e) {}
-                    canvas._chartInstance = null;
-                }
-
-                // Filter out 'ljp' (based on logic in your original script)
-                const filteredResults = results.filter(r => r.abbreviation.toLowerCase() !== 'ljp');
-                const labels = filteredResults.map(r => r.party_name);
-                const values = filteredResults.map(r => r.seats_won);
-                const colorMap = {
-                    'nda': '#fd6101',
-                    'rjd': '#13B605',
-                    'jsp': '#FABB00',
-                    'oth': '#D13A37'
-                };
-                const colors = filteredResults.map(r => colorMap[r.abbreviation.toLowerCase()] || '#13B605');
-
-                // Adjust aspect ratio for mobile
-                const aspectRatio = (typeof options.aspectRatio !== 'undefined') ?
-                    options.aspectRatio :
-                    (window.innerWidth < 768 ? 1 : 1.5);
-
-                const config = {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: values,
-                            backgroundColor: colors,
-                            borderWidth: 2,
-                            borderColor: 'white',
-                            hoverOffset: 15,
-                            borderRadius: 4
-                        }]
+            const config = {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: 'white',
+                        hoverOffset: 15,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: aspectRatio,
+                    rotation: -90,
+                    circumference: 180,
+                    cutout: options.cutout || '60%',
+                    animation: {
+                        duration: options.duration || 600
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true,
-                        aspectRatio: aspectRatio,
-                        rotation: -90,
-                        circumference: 180,
-                        cutout: options.cutout || '60%',
-                        animation: {
-                            duration: options.duration || 600
+                    plugins: {
+                        legend: {
+                            display: false
                         },
-                        plugins: {
-                            legend: {
-                                display: false
+                        tooltip: {
+                            enabled: false
+                        },
+                        datalabels: {
+                            color: 'black',
+                            font: {
+                                weight: 'bold',
+                                size: options.datalabelSize || 14
                             },
-                            tooltip: {
-                                enabled: false
-                            },
-                            datalabels: {
-                                color: 'black',
-                                font: {
-                                    weight: 'bold',
-                                    size: options.datalabelSize || 14
-                                },
-                                formatter: () => ''
-                            }
+                            formatter: () => ''
                         }
+                    }
+                },
+                plugins: []
+            };
+
+            if (window.ChartDataLabels) config.plugins.push(ChartDataLabels);
+            canvas._chartInstance = new Chart(canvas.getContext('2d'), config);
+            return canvas._chartInstance;
+        }
+
+        // --- 3. FUNCTION TO INIT MAHA-SWIPER ---
+        function initializeMahaSwiper() {
+            var swiperContainer = document.querySelector('#maha-section-wrapper .mh-carousel');
+            if (swiperContainer) {
+                if (swiperContainer.swiper) {
+                    swiperContainer.swiper.destroy(true, true);
+                }
+                new Swiper(swiperContainer, {
+                    loop: true,
+                    navigation: {
+                        nextEl: '.mh-button-next',
+                        prevEl: '.mh-button-prev',
                     },
-                    plugins: []
-                };
-
-                if (window.ChartDataLabels) config.plugins.push(ChartDataLabels);
-                canvas._chartInstance = new Chart(canvas.getContext('2d'), config);
-                return canvas._chartInstance;
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: false,
+                    },
+                });
             }
+        }
 
-            // ---------------- INIT MAHA-MUKABLA CHART ----------------
-            // Note: 'results3' must be defined globally from the script block above.
-            createSemiCircleChart('semiCircleChart3', results3, {
-                duration: 500
-            });
+        // --- 4. FUNCTION TO INIT ALL MAHA-SECTION COMPONENTS ---
+        function initializeMahaSectionComponents() {
+            initializeMahaSwiper();
 
-            // ---------------- RE-RENDER ON RESIZE ----------------
-            let resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
-                    // Re-render only the maha-mukabla chart
+            if (typeof results3 !== 'undefined') {
+                createSemiCircleChart('semiCircleChart3', results3, {
+                    duration: 500
+                });
+            } else {
+                console.log("Maha-Section components loaded. 'results3' not found yet.");
+            }
+        }
+
+        // --- 5. **NEW** FUNCTION TO INIT LIVE-SECTION ---
+        function initializeLiveSectionComponents() {
+            console.log("Live section components re-initialized.");
+            
+            // **IMPORTANT**: Add your JavaScript for the
+            // `_election-live-section` partial here.
+            // For example, if it has a chart with data `results1`:
+            //
+            // if (typeof results1 !== 'undefined') {
+            //    createSemiCircleChart('electionChart1', results1);
+            // }
+        }
+
+        // --- 6. FUNCTION TO REFRESH MAHA-SECTION ---
+        async function refreshMahaSection() {
+            try {
+                const response = await fetch('/refresh-maha-section');
+                const html = await response.text();
+                document.getElementById('maha-section-wrapper').innerHTML = html;
+                initializeMahaSectionComponents();
+            } catch (error) {
+                console.error('Error refreshing Maha Muqabala:', error);
+            }
+        }
+
+        // --- 7. **NEW** FUNCTION TO REFRESH LIVE-SECTION ---
+        async function refreshLiveSection() {
+            try {
+                // Fetch from the route you created
+                const response = await fetch('/refresh-live-section');
+                const html = await response.text();
+                
+                // Target the new wrapper ID
+                document.getElementById('election-live-wrapper').innerHTML = html;
+                
+                // Re-run the JavaScript for the new content
+                initializeLiveSectionComponents();
+
+            } catch (error) {
+                console.error('Error refreshing Election Live:', error);
+            }
+        }
+
+        // --- 8. INITIALIZE ON PAGE LOAD ---
+        initializeMahaSectionComponents();
+        initializeLiveSectionComponents(); // Call the new function
+
+        // --- 9. SET REFRESH INTERVALS ---
+        setInterval(refreshMahaSection, 5000); // 5 seconds
+        setInterval(refreshLiveSection, 8000); // 8 seconds (or your choice)
+
+        // --- 10. HANDLE RESIZE ---
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                // Re-render maha chart
+                if (typeof results3 !== 'undefined') {
                     createSemiCircleChart('semiCircleChart3', results3);
-                }, 200);
-            });
+                }
+                // **Add your live-section chart here too if it needs to resize**
+                // if (typeof results1 !== 'undefined') {
+                //     createSemiCircleChart('electionChart1', results1);
+                // }
+            }, 200);
         });
-    </script>
+
+    });
+</script>
 </body>
 
 </html>

@@ -61,78 +61,29 @@
                       <?php
                       $bidhansabhacatname = $category->name;
                       ?>
-                       @if (trim($bidhansabhacatname) === 'विधानसभा चुनाव')
-                      <section class="election-section-live">
-                          @if ($showExitPoll)
-                               @include('components.election-exit-poll')
-                              <x-horizontal-ad :ad="$data['homeAds']['home_header_ad'] ?? null" />
-                          @elseif($showLive)
-                              @include('components.election-live-section')
-                              <x-horizontal-ad :ad="$data['homeAds']['home_header_ad'] ?? null" />
-                          @endif
+                      @if (trim($bidhansabhacatname) === 'विधानसभा चुनाव')
+                          <section class="election-section-live">
+                              @if ($showExitPoll)
+                                  @include('components.election-exit-poll')
+                                  <x-horizontal-ad :ad="$data['homeAds']['home_header_ad'] ?? null" />
+                              @elseif($showLive)
+                                  <div id="election-live-wrapper">
+                                      @include('partials._election-live-section')
+                                  </div>
+                                  <x-horizontal-ad :ad="$data['homeAds']['home_header_ad'] ?? null" />
+                              @endif
 
-                      </section>
+                          </section>
                       @endif
                       {{-- ============================================= --}}
                       {{-- NL1043: 08.10.2025 : added --}}
                       @if (trim($bidhansabhacatname) === 'विधानसभा चुनाव')
-                          <section class="sdle-section">
-                              <div class="cm-container">
-                                  <div class="sdle-block">
-                                      <img class="sdle-img" src="{{ asset('asset/images/election-schedule-bg.jpg') }}"
-                                          alt="Other Parties Logo">
-                                      <div class="sdle-title-box">
-                                          <div class="sdle-title1">बिहार विधानसभा चुनाव 2025 शेड्यूल</div>
-                                          {{-- <div class="sdle-title2">बिहार विधानसभा चुनाव 2025 शेड्यूल</div> --}}
-                                      </div>
-                                      <div class="sdle-wrap">
-                                          <div class="sdle-left">
-                                              <img src="{{ asset('asset/images/bihar-map.png') }}" alt="Bihar map">
-                                          </div>
-                                          <div class="sdle-mid">
-                                              <div class="phase-wrap">
-                                                  <div class="phase-l">
-                                                      <img class="vote-poll"
-                                                          src="{{ asset('asset/images/vote-graph.png') }}" alt="Vote poll">
-                                                      <div class="phase-date pd-boder">
-                                                          <div class="phs-1">
-                                                              <h3>फेज 1</h3>
-                                                              <h3>6 नवंबर - 121 सीटें</h3>
-                                                          </div>
-                                                          <a class="phase-details-btn ps-btn1"
-                                                              href="https://www.newsnmf.com/bihar-election-2025-phase-1">Full
-                                                              Details</a>
-                                                      </div>
-                                                      <div class="phase-date">
-                                                          <div class="phs-2">
-                                                              <h3>फेज 2</h3>
-                                                              <h3>11 नवंबर - 122 सीटें</h3>
-                                                          </div>
-                                                          <a class="phase-details-btn ps-btn2"
-                                                              href="https://www.newsnmf.com/bihar-election-2025-phase-2">Full
-                                                              Details</a>
-                                                      </div>
-                                                  </div>
-                                                  <div class="phase-r"><img
-                                                          src="{{ asset('asset/images/grahics-14nov.jpg') }}"
-                                                          alt="voting-date"></div>
-                                              </div>
-                                          </div>
-                                          <div class="sdle-right">
-                                              <img src="{{ asset('asset/images/chair.png') }}" alt="chair">
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </section>
-                        
-
                           <!-- Second visit -->
-                          <section class="maha-section">
+                          <section class="maha-section" >
                               {{-- show mahamukabla --}}
                               @if ($showMaha)
-                                  <div class="mt-3">
-                                      @include('components.election-maha-section')
+                                  <div class="mt-3" id="maha-section-wrapper">
+                                      @include('partials._maha-section')
                                   </div>
                               @endif
                           </section>
@@ -410,7 +361,8 @@
                                                               <div class="win-t"></div>
                                                               <div class="win-l"></div>
                                                           </div>
-                                                         <canvas id="semiCircleChartNew" width="256" height="170"></canvas>
+                                                          <canvas id="semiCircleChartNew" width="256"
+                                                              height="170"></canvas>
                                                           <!-- <div class="legend" id="chartLegend"></div> -->
                                                           <div class="total-seats">
                                                               <p>Total Seats</p>
@@ -520,7 +472,7 @@
           </div>
       </div>
       {{-- added===== --}}
-    {{--   @php
+      {{--   @php
           $results3 = $topParties->take(4)->map(function ($p) {
               return [
                   'party_name' => $p->party_name,
@@ -542,157 +494,319 @@
       <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
       <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-<script>
-    // This script block should be the ONLY one that defines and creates charts.
+      <script>
+          /**
+           * Refreshes the "Maha Muqabala" section by fetching new HTML,
+           * replacing the content of '#maha-section-wrapper', and 
+           * re-initializing its components (charts, swipers).
+        */
+                  async function refreshMahaSection() {
+                      try {
+                          const response = await fetch('/refresh-maha-section');
+                          const html = await response.text();
 
-    // 1. Define data for the new chart
-    const resultsNew = [
-        { party_name: "NDA", seats_won: 95, abbreviation: "nda" },
-        { party_name: "RJD+", seats_won: 70, abbreviation: "rjd" },
-        { party_name: "OTH", seats_won: 20, abbreviation: "oth" }
-    ];
+                          // Find the wrapper and replace its content
+                          const wrapper = document.getElementById('maha-section-wrapper');
+                          if (wrapper) {
+                              wrapper.innerHTML = html;
+                          }
 
-    // 2. Define data for other charts (if they exist)
-    const results1 = [
-        { party_name: "NDA", seats_won: 87, abbreviation: "nda" },
-        { party_name: "RJD+", seats_won: 53, abbreviation: "rjd" },
-        { party_name: "LJP", seats_won: 5, abbreviation: "ljp" },
-        { party_name: "OTH", seats_won: 9, abbreviation: "oth" }
-    ];
-    
-    const results2 = [
-        { party_name: "NDA", seats_won: 87, abbreviation: "nda" },
-        { party_name: "RJD+", seats_won: 53, abbreviation: "rjd" },
-        { party_name: "LJP", seats_won: 5, abbreviation: "ljp" },
-        { party_name: "OTH", seats_won: 9, abbreviation: "oth" }
-    ];
+                          // Re-initialize components for this section
+                          // Assumes initializeMahaSectionComponents() is defined elsewhere
+                          if (typeof initializeMahaSectionComponents === 'function') {
+                              initializeMahaSectionComponents();
+                          }
 
-    // 3. Handle Swiper (with a check to prevent errors)
-    const mhCarousel = document.querySelector('.mh-carousel');
-    if (mhCarousel) {
-        new Swiper('.mh-carousel', {
-            loop: true,
-            navigation: {
-                nextEl: '.mh-button-next',
-                prevEl: '.mh-button-prev',
-            },
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
-        });
-    }
+                      } catch (error) {
+                          console.error('Error refreshing Maha Muqabala:', error);
+                      }
+                  }
 
-    // 4. Run all chart/counter code on DOMContentLoaded
-    document.addEventListener("DOMContentLoaded", function() {
-        
-        // ---------------- COUNTER ----------------
-        const counters = document.querySelectorAll(".count");
-        counters.forEach(counter => {
-            let target = +counter.getAttribute("data-count");
-            let current = 0;
-            let increment = Math.ceil(target / 50);
+                  /**
+                   * Refreshes the "Election Live" section by fetching new HTML,
+                   * replacing the content of '#election-live-wrapper', and 
+                   * re-initializing its components.
+                   */
+                  async function refreshLiveSection() {
+                      try {
+                          // Fetch from the new route
+                          const response = await fetch('/refresh-live-section');
+                          const html = await response.text();
 
-            let interval = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(interval);
-                }
-                counter.textContent = current.toString().padStart(2, '0');
-            }, 30);
-        });
+                          // Target the specific wrapper for this section
+                          const wrapper = document.getElementById('election-live-wrapper');
+                          if (wrapper) {
+                              wrapper.innerHTML = html;
+                          }
 
-        // ---------------- SEMI-CIRCLE CHART FUNCTION ----------------
-        if (window.Chart && window.ChartDataLabels && !Chart._nmfDataLabelsRegistered) {
-            Chart.register(ChartDataLabels);
-            Chart._nmfDataLabelsRegistered = true;
-        }
+                          // Re-initialize components for this section
+                          // Assumes initializeLiveSectionComponents() is defined elsewhere
+                          if (typeof initializeLiveSectionComponents === 'function') {
+                              initializeLiveSectionComponents();
+                          }
 
-        function createSemiCircleChart(canvasId, results, options = {}) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return null; // This safely skips charts that don't exist on the page
+                      } catch (error) {
+                          console.error('Error refreshing Election Live:', error);
+                      }
+                  }
 
-            if (canvas._chartInstance) {
-                try { canvas._chartInstance.destroy(); } catch (e) {}
-                canvas._chartInstance = null;
-            }
+                  // Call refresh functions every 10 seconds (10000 ms).
+                  // Will only invoke the relevant refresh if its wrapper exists.
+                  setInterval(refreshMahaSection, 8000); // 5 seconds
+        setInterval(refreshLiveSection, 8000); // 8 seco
+              </script>
 
-            const filteredResults = results.filter(r => r.abbreviation.toLowerCase() !== 'ljp');
-            const labels = filteredResults.map(r => r.party_name);
-            const values = filteredResults.map(r => r.seats_won);
-            const colorMap = {
-                'nda': '#fd6101',
-                'rjd': '#13B605',
-                'jsp': '#FABB00',
-                'oth': '#D13A37'
-            };
-            const colors = filteredResults.map(r => colorMap[r.abbreviation.toLowerCase()] || '#13B605');
-            const aspectRatio = (typeof options.aspectRatio !== 'undefined') ?
-                options.aspectRatio :
-                (window.innerWidth < 768 ? 1 : 1.5);
+    <script>
+          // NL1043: 14.11.2025 : Refactored for AJAX refresh
+          
+          // 1. Define data for all charts (except results3, which comes from PHP)
+          const resultsNew = [{
+                  party_name: "NDA",
+                  seats_won: 95,
+                  abbreviation: "nda"
+              },
+              {
+                  party_name: "RJD+",
+                  seats_won: 70,
+                  abbreviation: "rjd"
+              },
+              {
+                  party_name: "OTH",
+                  seats_won: 20,
+                  abbreviation: "oth"
+              }
+          ];
 
-            const config = {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: values,
-                        backgroundColor: colors,
-                        borderWidth: 2,
-                        borderColor: 'white',
-                        hoverOffset: 15,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: aspectRatio,
-                    rotation: -90,
-                    circumference: 180,
-                    cutout: options.cutout || '60%',
-                    animation: {
-                        duration: options.duration || 600
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { enabled: false },
-                        datalabels: {
-                            color: 'black',
-                            font: { weight: 'bold', size: options.datalabelSize || 14 },
-                            formatter: () => ''
-                        }
-                    }
-                },
-                plugins: []
-            };
+          const results1 = [{
+                  party_name: "NDA",
+                  seats_won: 87,
+                  abbreviation: "nda"
+              },
+              {
+                  party_name: "RJD+",
+                  seats_won: 53,
+                  abbreviation: "rjd"
+              },
+              {
+                  party_name: "LJP",
+                  seats_won: 5,
+                  abbreviation: "ljp"
+              },
+              {
+                  party_name: "OTH",
+                  seats_won: 9,
+                  abbreviation: "oth"
+              }
+          ];
 
-            if (window.ChartDataLabels) config.plugins.push(ChartDataLabels);
-            canvas._chartInstance = new Chart(canvas.getContext('2d'), config);
-            return canvas._chartInstance;
-        }
+          const results2 = [{
+                  party_name: "NDA",
+                  seats_won: 87,
+                  abbreviation: "nda"
+              },
+              {
+                  party_name: "RJD+",
+                  seats_won: 53,
+                  abbreviation: "rjd"
+              },
+              {
+                  party_name: "LJP",
+                  seats_won: 5,
+                  abbreviation: "ljp"
+              },
+              {
+                  party_name: "OTH",
+                  seats_won: 9,
+                  abbreviation: "oth"
+              }
+          ];
+          
+          // Note: 'results3' is now defined in a <script> block just above this one.
+          
+          
+          // 2. Make helper functions global so all scripts can use them
 
-        // ---------------- INIT ALL CHARTS ----------------
-        // Note: 'results3' is defined globally in your HTML, so we can use it here.
-        
-        createSemiCircleChart('semiCircleChartNew', resultsNew, { duration: 500 });
-        createSemiCircleChart('semiCircleChart2', results2, { duration: 500 });
-        createSemiCircleChart('semiCircleChart3', results3, { duration: 500 });
-        // The call to 'semiCircleChart' is removed as it doesn't exist.
+          /**
+           * Registers ChartDataLabels plugin if not already registered.
+           */
+          function registerChartPlugins() {
+              if (window.Chart && window.ChartDataLabels && !Chart._nmfDataLabelsRegistered) {
+                  Chart.register(ChartDataLabels);
+                  Chart._nmfDataLabelsRegistered = true;
+              }
+          }
 
-        // ---------------- RE-RENDER ON RESIZE ----------------
-        let resizeTimer;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function() {
-                createSemiCircleChart('semiCircleChartNew', resultsNew);
-                createSemiCircleChart('semiCircleChart2', results2);
-                createSemiCircleChart('semiCircleChart3', results3);
-            }, 200);
-        });
-    });
-</script>
+          /**
+           * Creates or updates a semi-circle chart on a given canvas.
+           */
+          function createSemiCircleChart(canvasId, results, options = {}) {
+              registerChartPlugins(); // Ensure plugins are ready
+              
+              const canvas = document.getElementById(canvasId);
+              if (!canvas) return null; // Safely skip if canvas doesn't exist
+
+              // Destroy previous chart instance if it exists
+              if (canvas._chartInstance) {
+                  try {
+                      canvas._chartInstance.destroy();
+                  } catch (e) {}
+                  canvas._chartInstance = null;
+              }
+
+              // Filter out LJP as your original code does
+              const filteredResults = results.filter(r => r.abbreviation.toLowerCase() !== 'ljp');
+              const labels = filteredResults.map(r => r.party_name);
+              const values = filteredResults.map(r => r.seats_won);
+              const colorMap = {
+                  'nda': '#fd6101',
+                  'rjd': '#13B605',
+                  'jsp': '#FABB00',
+                  'oth': '#D13A37'
+              };
+              const colors = filteredResults.map(r => colorMap[r.abbreviation.toLowerCase()] || '#13B605');
+              const aspectRatio = (typeof options.aspectRatio !== 'undefined') ?
+                  options.aspectRatio :
+                  (window.innerWidth < 768 ? 1 : 1.5);
+
+              const config = {
+                  type: 'doughnut',
+                  data: {
+                      labels: labels,
+                      datasets: [{
+                          data: values,
+                          backgroundColor: colors,
+                          borderWidth: 2,
+                          borderColor: 'white',
+                          hoverOffset: 15,
+                          borderRadius: 4
+                      }]
+                  },
+                  options: {
+                      responsive: true,
+                      maintainAspectRatio: true,
+                      aspectRatio: aspectRatio,
+                      rotation: -90,
+                      circumference: 180,
+                      cutout: options.cutout || '60%',
+                      animation: {
+                          duration: options.duration || 600
+                      },
+                      plugins: {
+                          legend: {
+                              display: false
+                          },
+                          tooltip: {
+                              enabled: false
+                          },
+                          datalabels: {
+                              color: 'black',
+                              font: {
+                                  weight: 'bold',
+                                  size: options.datalabelSize || 14
+                              },
+                              formatter: () => ''
+                          }
+                      }
+                  },
+                  plugins: []
+              };
+
+              if (window.ChartDataLabels) config.plugins.push(ChartDataLabels);
+              canvas._chartInstance = new Chart(canvas.getContext('2d'), config);
+              return canvas._chartInstance;
+          }
+
+          /**
+           * Initializes components for the 'Maha Muqabala' section.
+           * This includes chart 'semiCircleChart3' and the '.mh-carousel' swiper.
+           */
+          function initializeMahaSectionComponents() {
+              // Check if results3 is defined before trying to use it
+              if (typeof results3 !== 'undefined') {
+                  createSemiCircleChart('semiCircleChart3', results3, {
+                      duration: 500
+                  });
+              }
+
+              const mhCarousel = document.querySelector('.mh-carousel');
+              if (mhCarousel) {
+                   // Destroy existing swiper instance if it exists to prevent conflicts
+                   if (mhCarousel.swiper) {
+                        mhCarousel.swiper.destroy(true, true);
+                   }
+                  new Swiper('.mh-carousel', {
+                      loop: true,
+                      navigation: {
+                          nextEl: '.mh-button-next',
+                          prevEl: '.mh-button-prev',
+                      },
+                      autoplay: {
+                          delay: 3000,
+                          disableOnInteraction: false,
+                      },
+                  });
+              }
+          }
+
+          /**
+           * Initializes components for the 'Election Live' section.
+           * (Add any chart/swiper init code for this section here)
+           */
+          function initializeLiveSectionComponents() {
+              // e.g., createSemiCircleChart('liveChartCanvas', liveResults);
+          }
+          
+          /**
+           * Initializes components that do NOT refresh.
+           * Runs only once on page load.
+           */
+          function initializeStaticComponents() {
+               // ---------------- COUNTER ----------------
+              const counters = document.querySelectorAll(".count");
+              counters.forEach(counter => {
+                  let target = +counter.getAttribute("data-count");
+                  let current = 0;
+                  let increment = Math.ceil(target / 50);
+
+                  let interval = setInterval(() => {
+                      current += increment;
+                      if (current >= target) {
+                          current = target;
+                          clearInterval(interval);
+                      }
+                      counter.textContent = current.toString().padStart(2, '0');
+                  }, 30);
+              });
+              
+              // ---------------- INIT STATIC CHARTS ----------------
+              createSemiCircleChart('semiCircleChartNew', resultsNew, {
+                  duration: 500
+              });
+              createSemiCircleChart('semiCircleChart2', results2, {
+                  duration: 500
+              });
+          }
+
+          // 3. Run initializers on DOMContentLoaded
+          document.addEventListener("DOMContentLoaded", function() {
+              initializeStaticComponents();
+              initializeMahaSectionComponents(); // Run on first load
+              initializeLiveSectionComponents(); // Run on first load
+
+              // ---------------- RE-RENDER ON RESIZE ----------------
+              let resizeTimer;
+              window.addEventListener('resize', function() {
+                  clearTimeout(resizeTimer);
+                  resizeTimer = setTimeout(function() {
+                      // Re-init ALL charts
+                      initializeStaticComponents();
+                      initializeMahaSectionComponents();
+                      initializeLiveSectionComponents();
+                  }, 200);
+              });
+          });
+          
+      </script>
 
       <script>
           const swipernew = new Swiper('.swiper2', {
