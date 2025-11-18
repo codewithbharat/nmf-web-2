@@ -53,7 +53,14 @@ private function getBlogData($cat_name, $name)
             ->where('categories_ids', $blog->categories_ids)
             ->with(['thumbnail', 'images'])
             ->limit(6)->get();
-
+         
+        if ($blog) {
+            Blog::where('id', $blog->id)->increment('WebHitCount');
+            
+            // Optional: Manually update the local $blog object's WebHitCount 
+            // so the current view displays the increased count.
+            $blog->WebHitCount = ($blog->WebHitCount ?? 0) + 1;
+        }
         $latests = Blog::where('status', 1)
             ->where('categories_ids', $blog->category->id)
             ->where('id', '!=', $blog->id)
