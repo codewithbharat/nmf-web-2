@@ -246,6 +246,7 @@
                                             <th>Status</th>
                                             <th>Publish Date</th>
                                             <th>Website Count</th>
+                                            <th>App Count</th>
                                             <th>Sequence</th>
                                             <th>IS LIVE</th>
                                             <th>Breaking Status</th>
@@ -299,6 +300,7 @@
                                                     <td>{{ $blog->created_at }}</td>
                                                     
                                                     <td>{{ $blog->WebHitCount }}</td>
+                                                    <td>{{ $blog->AppHitCount }}</td>
                                                     <td>{{ $blog->sequence_id }}</td>
                                                     <td>{{ $blog->isLive }}</td>
                                                     <td>{{ $blog->breaking_status }}</td>
