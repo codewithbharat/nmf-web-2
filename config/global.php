@@ -22,9 +22,9 @@ return [
     // 1. Decode HTML entities first
     $html = html_entity_decode($html);
 
-    // 2. ⭐ Convert Facebook <iframe> embeds (No change)
+// 2. ⭐ Convert Facebook <iframe> embeds (FIXED)
     $html = preg_replace_callback(
-        '/<iframe[^>]*src="https?:\/\/www\.facebook\.com\/plugins\/(?:post|video)\.php\?href=([^"&]+)[^"]*"[^>]*><\/iframe>/i',
+        '/<iframe[^>]*src="https?:\/\/www\.facebook\.com\/plugins\/(?:post|video)\.php\?[^"]*?href=([^"&]+)[^"]*"[^>]*><\/iframe>/i',
         function ($m) {
             $decoded_href = urldecode($m[1]);
             return '<amp-facebook width="552" height="310" layout="responsive" data-href="'.$decoded_href.'"></amp-facebook>';
