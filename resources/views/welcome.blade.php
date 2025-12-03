@@ -295,103 +295,7 @@
         </div>
     </div>
 
-<section class="custom_block">
-    @if (!empty($sectionCategories[5]))
-        @include('components.news-nine-style', [
-            'cat_id'        => $sectionCategories[5]['catid'],
-            'cat_name'      => $sectionCategories[5]['name'],
-            'cat_site_url'  => $sectionCategories[5]['site_url'],
-        ])
-    @endif
- 
-    <div class="rasifal-section">
-        <div class="cm-container">
- 
-            <div class="rashifal-section">
-                <div class="rashifal-container" role="region" aria-label="राशिफल दैनिक">
-                                    <div class="rashifal-box">
- 
-                    <div class="rotating-bg" aria-hidden="true"></div>
- 
-                    <?php
-                        $rashis = App\Models\Rashifal::where('status', 1)->get();
-                    ?>
- 
-                    <div class="rashifal-wrapper">
- 
-                        <!-- Navigation Buttons -->
-                        <button class="nav-btn prev" aria-label="पिछला राशिफल">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
- 
-                        <div class="rashifal-slider"
-                             tabindex="0"
-                             role="listbox"
-                             aria-live="polite"
-                             aria-label="राशि चिन्ह">
- 
-                            <div class="rashifal-item spacer" aria-hidden="true"></div>
- 
-                            @foreach($rashis as $index => $r)
-                                <?php
-                                    $rashiImg = config('global.base_url_image') . $r->full_path . '/' . $r->file_name;
-                                ?>
-                                <div class="rashifal-item" role="option"
-                                     aria-selected="{{ $index == 0 ? 'true':'false' }}">
-                            <img src="{{ $rashiImg }}"
-                                alt="{{ $r->name }}"
-                                data-sign="{{ strtolower($r->name) }}"
-                                data-title="{{ $r->name }}"
-                                data-description="{{ $r->description }}"
-                                class="{{ $index == 0 ? 'active':'' }}"
-                                loading="lazy"
-                                tabindex="0" />
-                                </div>
-                            @endforeach
- 
-                            <div class="rashifal-item spacer" aria-hidden="true"></div>
- 
-                        </div>
- 
-                        <!-- Navigation Buttons -->
-                        <button class="nav-btn next" aria-label="अगला राशिफल">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
- 
-                    </div>
- 
-                    <!-- Dynamic Title -->
-                    <h2 id="rashifal-title">
-                        आपके तारे - दैनिक: {{ $rashis[0]->name ?? '' }}
-                    </h2>
- 
-                    <!-- Dynamic Description -->
-                    <p id="rashifal-text">
-                        {{ $rashis[0]->description ?? '' }}
-                    </p>
- 
-                </div>
- 
-                <div class="adBgSidebar">
-                    <div class="adtxt">Advertisement</div>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-3986924419662120"
-     data-ad-slot="6911924096"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-                </div>
- 
-                </div>
- 
-            </div>
- 
-        </div>
-    </div>
-</section>
+
     <div class="web-stories-section">
         <?php
         $allWebStories = WebStories::with('category', 'webStoryFiles')->where('status', '1')->orderBy('sequence', 'asc')->limit(10)->get();
@@ -445,6 +349,7 @@
             @include('components.photo-gallery-12')
         </div>
     </section> --}}
+    
     <div class="news-panel">
         <div class="cm-container">
             @if (!empty($sectionCategories[4]))
@@ -457,11 +362,110 @@
                     'category_name' => $sectionCategories[4]['name'],
                 ])
             @endif
+            @if (collect($sectionCategories)->contains('name', 'धर्म ज्ञान'))
+            <div class="rasifal-section">
+            <div class="cm-container">
+
+                <div class="rashifal-section">
+                    <div class="rashifal-container" role="region" aria-label="राशिफल दैनिक">
+                                        <div class="rashifal-box">
+
+                        <div class="rotating-bg" aria-hidden="true"></div>
+
+                        <?php 
+                            $rashis = App\Models\Rashifal::where('status', 1)->get();
+                        ?>
+
+                        <div class="rashifal-wrapper">
+
+                            <!-- Navigation Buttons -->
+                            <button class="nav-btn prev" aria-label="पिछला राशिफल">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+
+                            <div class="rashifal-slider"
+                                tabindex="0"
+                                role="listbox"
+                                aria-live="polite"
+                                aria-label="राशि चिन्ह">
+
+                                <div class="rashifal-item spacer" aria-hidden="true"></div>
+
+                                @foreach($rashis as $index => $r)
+                                    <?php 
+                                        $rashiImg = config('global.base_url_image') . $r->full_path . '/' . $r->file_name;
+                                    ?>
+                                    <div class="rashifal-item" role="option"
+                                        aria-selected="{{ $index == 0 ? 'true':'false' }}">
+                                <img src="{{ $rashiImg }}"
+                                    alt="{{ $r->name }}"
+                                    data-sign="{{ strtolower($r->name) }}"
+                                    data-title="{{ $r->name }}"
+                                    data-description="{{ $r->description }}"
+                                    class="{{ $index == 0 ? 'active':'' }}"
+                                    loading="lazy"
+                                    tabindex="0" />
+                                    </div>
+                                @endforeach
+
+                                <div class="rashifal-item spacer" aria-hidden="true"></div>
+
+                            </div>
+
+                            <!-- Navigation Buttons -->
+                            <button class="nav-btn next" aria-label="अगला राशिफल">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+
+                        </div>
+
+                        <!-- Dynamic Title -->
+                        <h2 id="rashifal-title">
+                            आपके तारे - दैनिक: {{ $rashis[0]->name ?? '' }}
+                        </h2>
+
+                        <!-- Dynamic Description -->
+                        <p id="rashifal-text">
+                            {{ $rashis[0]->description ?? '' }}
+                        </p>
+
+                    </div>
+
+                    <div class="adBgSidebar">
+                        <div class="adtxt">Advertisement</div>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3986924419662120"
+     data-ad-slot="6911924096"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                    </div>
+
+                    </div>
+
+                </div>
+
+                </div>
+            </div>
+            @endif
         </div>
     </div>
+    
 
+<section class="custom_block">
+    @if (!empty($sectionCategories[5]))
+        @include('components.news-nine-style', [
+            'cat_id'        => $sectionCategories[5]['catid'],
+            'cat_name'      => $sectionCategories[5]['name'],
+            'cat_site_url'  => $sectionCategories[5]['site_url'],
+        ])
+    @endif
 
- 
+</section>
+
 
 
     <div class="div_row mb-3">
