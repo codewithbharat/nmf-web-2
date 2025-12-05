@@ -579,6 +579,55 @@ window.addEventListener('load', function () {
         <div id="content" class="site-content">
             @yield('content')
         </div>
+        <div class="mobile-sticky-ad" id="stickyFooterAd">
+
+            <div class="sticky-close-btn" onclick="document.getElementById('stickyFooterAd').style.display='none';">
+                <i class="fa-solid fa-xmark"></i> Close
+            </div>
+
+            <span
+                style="font-size: 9px; color: #999; margin-top:0px; margin-bottom: 0px; display:block; text-align:center;">ADVERTISEMENT</span>
+
+            <div
+                style="position: relative; min-width: 320px; min-height: 50px; display: flex; justify-content: center;">
+
+                <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px"
+                    data-ad-client="ca-pub-3986924419662120" data-ad-slot="6911924096"></ins>
+
+                <a href="https://www.newsnmf.com/nmfapps/" target="_blank" class="ad-fallback-content"
+                    id="myFallback">
+                    <div class="dl-wrapper">
+                        <div class="ad-fallback-info">
+                            <div class="ad-app-icon">
+                                <img src="https://www.newsnmf.com/frontend/images/logo.png" alt="NewsNMF"
+                                    class="--logo-sm" />
+                            </div>
+                            <div class="ad-text-group">
+                                <div class="ad-app-name">NMF App</div>
+                            </div>
+                        </div>
+                        <div class="ad-fallback-btn">Download</div>
+                    </div>
+                </a>
+
+            </div>
+
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+
+                window.addEventListener('load', function() {
+                    setTimeout(function() {
+                        var adSlot = document.querySelector('#stickyFooterAd ins.adsbygoogle');
+                        // If AdSense is empty or hidden, show Fallback
+                        if (adSlot && (adSlot.getAttribute('data-ad-status') === 'unfilled' || adSlot
+                                .offsetHeight === 0 || adSlot.style.display === 'none')) {
+                            if (adSlot) adSlot.style.display = 'none';
+                            document.getElementById('myFallback').style.display = 'block';
+                        }
+                    }, 2500);
+                });
+            </script>
+        </div>
         <!-- Bottom Navigation -->
          <?php
            use App\Models\Clip;
@@ -592,7 +641,7 @@ window.addEventListener('load', function () {
             }
             $videourl=$clip->site_url;
          ?>
-        <div class="btm-nav">
+        <div class="btm-nav" id="btm-nav">
                 <a href="{{ config('global.base_url') . 'short-videos/' . $catUrl . '/' . $videourl }}" class="nav-item">
                 <i class="fas fa-bolt"></i>
                 <span>शॉर्ट्स</span>
@@ -615,21 +664,25 @@ window.addEventListener('load', function () {
             </a>
         </div>
         <script>
-            function openSearchModal() {
-                document.getElementById("searchModal").style.display = "flex";
-            }
+            // Buttom nav hide on scroll
+        let lastScroll = 0;
+        const stickyAd = document.getElementById("stickyFooterAd");
+        const bottomNav = document.getElementById("btm-nav");
 
-            function closeSearchModal() {
-                document.getElementById("searchModal").style.display = "none";
-            }
+        window.addEventListener("scroll", function () {
+        const currentScroll = window.pageYOffset;
 
-            // Optional: close modal on outside click
-            window.onclick = function(event) {
-                const modal = document.getElementById("searchModal");
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
-            };
+        if (currentScroll > lastScroll + 10) {
+        stickyAd.style.transform = "translateY(0)";      // show smooth
+        bottomNav.style.transform = "translateY(100%)";  // hide smooth
+        } 
+        else if (currentScroll < lastScroll - 10) {
+        stickyAd.style.transform = "translateY(100%)";   // hide smooth
+        bottomNav.style.transform = "translateY(0)";     // show smooth
+        }
+
+        lastScroll = currentScroll;
+        });
         </script>
 
 
