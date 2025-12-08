@@ -160,7 +160,7 @@
                                                     <div class="at_left">
                                                         <div class="auth-box">
                                                             <img class="auth-img" width="40" height="40"
-                                                                src="https://www.newsnmf.com/frontend/images/logo.png"
+                                                                src="{{config('global.base_url_asset')}}asset/images/nmf-author.webp" loading="lazy"
                                                                 alt="nmf-author">
                                                             <div class="info-area">
                                                                 <div class="editedby"> <a
@@ -201,9 +201,8 @@
                                                             $slug = $data['blog']->site_url;
                                                             $shareUrl = url("$catname/$slug");
                                                         @endphp
-                                                        <div class="c-row">
-
-
+                                                        
+                                                        <div class="c-row">  
                                                             <div class="shr_dropdown">
                                                                 <button class="shr-button">
                                                                     <svg xmlns="http://www.w3.org/2000/svg"
