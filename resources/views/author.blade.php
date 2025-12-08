@@ -56,7 +56,7 @@
                                                 <div class="author-card-right">
                                                     <div class="text_wrap">
                                                         <h2>{{ isset($users->name) ? $users->name : '' }}</h2>
-
+                                                        <a class="twitter-link" href=""><i class="fa-brands fa-x-twitter"></i>nmf@tweet</a>
                                                     </div>
                                                     <div class="author-desc">
                                                         <p>{{ isset($users->description) ? $users->description : 'NMF journalist with over a decade of experience covering politics, global affairs, and human interest stories. Her reporting combines in-depth analysis with a focus on storytelling that resonates with readers across platforms.' }}
