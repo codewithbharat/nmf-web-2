@@ -98,7 +98,7 @@
                                                                 <div class="nws_article_rt">
                                                                     <div class="nws_row">
                                                                         <a href="{{ asset('/') }}{{ isset($cat->site_url) ? $cat->site_url : '' }}"
-                                                                            class="nws_article_strip">{{ $cat->name ?? '' }}</a>
+                                                                            class="nws_article_strip at_border">{{ $cat->name ?? '' }}</a>
                                                                         <div class="publish_wrap">
                                                                             <div class="publish_dt">
                                                                                 <i class="fa-regular fa-calendar-days"></i>

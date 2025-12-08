@@ -144,6 +144,7 @@
   height: 40px;
   margin-right: 10px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .info-area {
@@ -200,6 +201,36 @@
     display: flex;
     gap: 25px;
   }
+}
+.read-article-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    background: #f7f7f7;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #111;
+    transition: background .25s, color .25s, border-color .25s;
+}
+
+.read-article-btn:hover {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+.read-article-btn.is-playing {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+.read-article-icon {
+    flex-shrink: 0;
 }
 
 .shr_btn {
@@ -1120,7 +1151,9 @@ a.trendingtopic_container {
   display: flex;
   gap: 5px;
 }
-
+.at_border{
+  border: 1px solid #ffb5b5;
+}
 /* NL1021- 16sep 2025 - poppins removed */
 .publish_dt i, .publish_tm i{
   font-size: 10px;
@@ -1128,7 +1161,7 @@ a.trendingtopic_container {
 .publish_dt,
 .publish_tm {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 3px;
   color: #666666c7;
   font-size: 12px;

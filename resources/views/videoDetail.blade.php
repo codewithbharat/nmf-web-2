@@ -89,11 +89,10 @@
                                                     <div class="at_left">
                                                         <div class="auth-box">
                                                             <img class="auth-img" width="40" height="40"
-                                                                src="https://www.newsnmf.com/frontend/images/logo.png"
+                                                                src="{{config('global.base_url_asset')}}asset/images/nmf-author.webp" loading="lazy"
                                                                 alt="nmf-author">
                                                             <div class="info-area">
                                                                 <div class="editedby">
-                                                                    Created By:
                                                                     <a
                                                                         href="{{ url('/author/' . str_replace(' ', '_', $video->author->url_name ?? '-')) }}">
                                                                         {{ $video->author->name ?? 'NMF News' }}
