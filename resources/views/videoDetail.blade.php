@@ -82,43 +82,51 @@
                                             <div class="main_article">
                                                 <h1 class="rt_main">{{ $video->title }}</h1>
                                                 <!-- <p class="rt_sub">
-                                                        {!! $video->description !!}
-                                                    </p> -->
+                                                                    {!! $video->description !!}
+                                                                </p> -->
                                                 {{-- Metadata --}}
                                                 <div class="artcle_tab">
                                                     <div class="at_left">
-                                                        <div class="editedby">
-                                                            Created By:
-                                                            <a
-                                                                href="{{ url('/author/' . str_replace(' ', '_', $video->author->url_name ?? '-')) }}">
-                                                                {{ $video->author->name ?? 'NMF News' }}
-                                                            </a>
-                                                        </div>
-                                                        <div class="category_tag">
-                                                            <i class="fa-solid fa-tag"></i>
-                                                            <a
-                                                                href="{{ url('/videos/' . $video->category->site_url ?? '') }}">
-                                                                {{ $video->category->name }}
-                                                            </a>
-                                                        </div>
-                                                        <div class="publish_wrap">
-                                                            <div class="publish_dt">
-                                                                <i class="fa-regular fa-calendar-days"></i>
-                                                                <span>{{ $video->created_at->format('d M, Y') }}</span>
+                                                        <div class="auth-box">
+                                                            <img class="auth-img" width="40" height="40"
+                                                                src="https://www.newsnmf.com/frontend/images/logo.png"
+                                                                alt="nmf-author">
+                                                            <div class="info-area">
+                                                                <div class="editedby">
+                                                                    Created By:
+                                                                    <a
+                                                                        href="{{ url('/author/' . str_replace(' ', '_', $video->author->url_name ?? '-')) }}">
+                                                                        {{ $video->author->name ?? 'NMF News' }}
+                                                                    </a>
+                                                                </div>
+                                                                <div class="info-inner">
+                                                                    <div class="category_tag">
+                                                                        <a
+                                                                            href="{{ url('/videos/' . $video->category->site_url ?? '') }}">
+                                                                            {{ $video->category->name }}
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="publish_wrap">
+                                                                        <div class="publish_dt">
+                                                                        
+                                                                            <span>{{ $video->created_at->format('d M, Y') }}</span>
+                                                                        </div>
+
+                                                                        @if ($video->updated_at != $video->created_at)
+                                                                            <div class="publish_dt">
+                                                                                <span>Updated:
+                                                                                    {{ $video->updated_at->format('d M, Y') }}</span>
+                                                                            </div>
+                                                                            <div class="publish_tm">
+                                                                                <span>{{ $video->updated_at->format('h:i A') }})</span>
+                                                                            </div>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
                                                             </div>
 
-                                                            @if ($video->updated_at != $video->created_at)
-                                                                <div class="publish_dt">
-                                                                    (<i class="fa-regular fa-calendar-days"></i>
-                                                                    <span>Updated:
-                                                                        {{ $video->updated_at->format('d M, Y') }}</span>
-                                                                </div>
-                                                                <div class="publish_tm">
-                                                                    <i class="fa-regular fa-clock"></i>
-                                                                    <span>{{ $video->updated_at->format('h:i A') }})</span>
-                                                                </div>
-                                                            @endif
                                                         </div>
+
                                                     </div>
 
                                                     {{-- Share Buttons --}}
@@ -132,14 +140,27 @@
                                                         @endphp
                                                         <div class="c-row">
                                                             <div class="shr_dropdown">
-                                                                <button class="shr-button">
-                                                                    <svg viewBox="0 0 512 512"
-                                                                        xmlns="http://www.w3.org/2000/svg" class="icon">
-                                                                        <path
-                                                                            d="M307 34.8c-11.5 5.1-19 16.6-19 29.2v64H176C78.8 128 0 206.8 0 304C0 417.3 81.5 467.9 100.2 478.1c2.5 1.4 5.3 1.9 8.1 1.9c10.9 0 19.7-8.9 19.7-19.7c0-7.5-4.3-14.4-9.8-19.5C108.8 431.9 96 414.4 96 384c0-53 43-96 96-96h96v64c0 12.6 7.4 24.1 19 29.2s25 3 34.4-5.4l160-144c6.7-6.1 10.6-14.7 10.6-23.8s-3.8-17.7-10.6-23.8l-160-144c-9.4-8.5-22.9-10.6-34.4-5.4z">
-                                                                        </path>
+                                                                <button class="shr-button" style="border-radius: 8px">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                        viewBox="0 0 24 24" width="24" height="24">
+                                                                        <circle cx="18" cy="5" r="3"
+                                                                            stroke="#000" stroke-width="2"
+                                                                            fill="none" />
+                                                                        <circle cx="6" cy="12" r="3"
+                                                                            stroke="#000" stroke-width="2"
+                                                                            fill="none" />
+                                                                        <circle cx="18" cy="19" r="3"
+                                                                            stroke="#000" stroke-width="2"
+                                                                            fill="none" />
+                                                                        <line x1="8.5" y1="13" x2="15.5"
+                                                                            y2="6" stroke="#000" stroke-width="2"
+                                                                            stroke-linecap="round" />
+                                                                        <line x1="8.5" y1="11"
+                                                                            x2="15.5" y2="18" stroke="#000"
+                                                                            stroke-width="2" stroke-linecap="round" />
                                                                     </svg>
-                                                                    Share
+
+
                                                                 </button>
                                                                 <div class="shr_content" id="shr_content">
 
@@ -244,7 +265,8 @@
                                                                                     <div class="playBtn-wrap3">
                                                                                         <span class="play-btn3"><i
                                                                                                 class="fa-solid fa-play"></i></span>
-                                                                                        <span class="v-duration3"> {{ $latest->duration }} </span>
+                                                                                        <span class="v-duration3">
+                                                                                            {{ $latest->duration }} </span>
                                                                                     </div>
                                                                                     <a
                                                                                         href="{{ url('/video/' . ($latest->category->site_url ?? '-') . '/' . $latest->site_url) }}">
