@@ -15,9 +15,10 @@ class SuperAdminController extends Controller
     public function index(Request $request) 
     {
         // Join users with roles manually
-        $users = User::select('users.*', 'roles.role_name')
-            ->leftJoin('roles', 'users.role', '=', 'roles.id') // Joining users with roles
-            ->where('users.id', '!=', 6);
+$users = User::select('users.*', 'roles.role_name')
+    ->leftJoin('roles', 'users.role', '=', 'roles.id')
+    ->where('users.id', '!=', 6);
+
 
         if (isset($request->title)) {
             $users->where(function ($query) use ($request) { // Show both hindi name and english url name in search title 
@@ -53,76 +54,81 @@ class SuperAdminController extends Controller
         $role = Role::all();
         return view('admin/addUser', ['roles'=>$role]);
     }
-    public function save(Request $request)
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'url_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => 'required|string|exists:roles,id',
-        ],[
-            'role.exists' => 'The user type is required.',
-        ]);
-        
-        User::create([
-            'role' => $request->role,
-            'name' =>  $request->name,
-            'url_name' => $request->url_name,
-            'email' => $request->email,
-            'description' => $request->description,
-            'password' => Hash::make($request->password),
-        ]);
-        return redirect('alluserslist');
+public function save(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'url_name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:8|confirmed',
+        'role' => 'required|exists:roles,id',
+        'image' => 'nullable|image|max:2048',
+    ]);
+
+    $imageName = null;
+
+    if ($request->hasFile('image')) {
+        $destinationPath = public_path('file');
+
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move($destinationPath, $imageName);
     }
+
+    User::create([
+        'role' => $request->role,
+        'name' => $request->name,
+        'url_name' => $request->url_name,
+        'email' => $request->email,
+        'description' => $request->description,
+        'twitter_link' => $request->twitter_link,
+        'image' => $imageName,  // <-- SAVE FILE NAME DIRECTLY
+        'password' => Hash::make($request->password),
+    ]);
+
+    return redirect('alluserslist');
+}
+
+
     public function edit($id)
     {
         $user = User::where('id', $id)->get()->first();
         // $role = Role::whereNot('id', 3)->get()->all();
         $role = Role::all();
-        $file = File::where('id', $user->image)->first();
-        return view('admin/editUser', ['roles'=>$role,'user'=>$user,'file'=>$file]);
-    }
-    public function editSave($id, Request $request)
-    {
-        $user = User::where('id', $id)->first();
-        $file = File::where('id', $user->image)->first();
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'url_name' => ['required', 'string', 'max:255'],
-            'role' => 'required|string|exists:roles,id',
-        ],[
-            'role.exists' => 'The user type is required.',
+       return view('admin/editUser', [
+            'roles' => $role,
+            'user' => $user
         ]);
-        $image = isset($file->file_name) ? $file->file_name : '';
-        if(isset($request->image)) {
-            $destinationPath = public_path('file');
-            $image = $request->image->getClientOriginalName();
-            $image = str_replace(' ', '_',$image);
-            $image = pathinfo($image, PATHINFO_FILENAME).time() . '.'. $request->image->extension();
-            $uploaded_file = File::create(
-                    [
-                        "user_id" => '1',
-                        "file_name" => $image,
-                        "file_type" => $request->image->getClientMimeType(),
-                        "file_size" => $request->image->getSize(),
-                        "full_path" => public_path('file'),
-                    ]   
-            );
-            $request->image->move($destinationPath,$image);
-            $image = $uploaded_file->id;
-        }
+    }
+public function editSave($id, Request $request)
+{
+    $user = User::find($id);
 
-        //echo "role=".$request->role;
-        User::where('id', $id)->update([
-            'role' => $request->role,
-            'name' =>  $request->name,
-            'image' => $image,
-            'url_name' => $request->url_name,
-            'description' => $request->description
-        ]);
-        return redirect('alluserslist');   
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'url_name' => 'required|string|max:255',
+        'role' => 'required|exists:roles,id',
+    ]);
+
+    $imageName = $user->image; // keep old
+
+    if ($request->hasFile('image')) {
+        $destinationPath = public_path('file');
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move($destinationPath, $imageName);
     }
+
+    $user->update([
+        'role' => $request->role,
+        'name' => $request->name,
+        'url_name' => $request->url_name,
+        'description' => $request->description,
+        'twitter_link' => $request->twitter_link,
+        'image' => $imageName,
+    ]);
+
+    return redirect('alluserslist');
+}
+
     public function del($id, Request $request) 
     {
         ?>
