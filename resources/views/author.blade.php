@@ -49,17 +49,35 @@
                                         <div class="news_sub_wrap pt-0">
                                             <div class="author-card">
                                                 <div class="author-card-left">
-                                                    <img src="{{config('global.base_url_asset')}}asset/images/nmf-author.webp" loading="lazy"
-                                                        width="130" height="130" decoding="async" 
-                                                        alt="{{ $users->name ?? 'Author Image' }}" class="author-image">
+                                                    <img src="{{ $users->image ? asset('file/' . $users->image) : asset('asset/images/nmf-author.webp') }}"
+                                                        class="author-image" alt="{{ $users->name }}" width="130"
+                                                        height="130">
+
+
                                                 </div>
+
+
                                                 <div class="author-card-right">
                                                     <div class="text_wrap">
-                                                        <h2>{{ isset($users->name) ? $users->name : '' }}</h2>
-                                                        <a class="twitter-link" href=""><i class="fa-brands fa-x-twitter"></i>nmf@tweet</a>
+                                                        <h2>{{ $users->name ?? '' }}</h2>
+
+                                                        @if (!empty($users->twitter_link))
+                                                            <a class="twitter-link" href="{{ $users->twitter_link }}"
+                                                                target="_blank">
+                                                                <i class="fa-brands fa-x-twitter"></i>
+                                                                {{-- @{{ basename($users - > twitter_link) }} --}}
+                                                            </a>
+                                                        @else
+                                                            <a class="twitter-link" href="javascript:void(0)">
+                                                                <i class="fa-brands fa-x-twitter"></i>
+                                                            </a>
+                                                        @endif
                                                     </div>
+
                                                     <div class="author-desc">
-                                                        <p>{{ isset($users->description) ? $users->description : 'NMF journalist with over a decade of experience covering politics, global affairs, and human interest stories. Her reporting combines in-depth analysis with a focus on storytelling that resonates with readers across platforms.' }}
+                                                        <p>
+                                                            {{ $users->description ??
+                                                                'NMF journalist with over a decade of experience covering politics, global affairs, and human interest stories. Her reporting combines in-depth analysis with a focus on storytelling that resonates with readers across platforms.' }}
                                                         </p>
                                                     </div>
                                                 </div>

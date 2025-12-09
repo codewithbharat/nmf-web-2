@@ -38,7 +38,8 @@
                                         <div class=" input-field col-md-6">
                                             <input placeholder="" autocomplete="off" type="text"
                                                 value="{{ $user->url_name }}" name="url_name" id="url_name">
-                                            <label for="name">Url Name(Name In English) <span class="text-danger">*</span></label>
+                                            <label for="name">Url Name(Name In English) <span
+                                                    class="text-danger">*</span></label>
                                             @error('url_name')
                                                 <div class="input-group-append">
                                                     <div class="input-group-text">
@@ -54,12 +55,13 @@
                                         <div class=" input-field col-md-6">
                                             <select class="js-example-basic-single form-select" data-width="100%"
                                                 name="role">
-                                                <option value="0">Select Role <span class="text-danger">*</span></option>
+                                                <option value="0">Select Role <span class="text-danger">*</span>
+                                                </option>
                                                 @foreach ($roles as $role)
-                                                    <option value="{{ $role->id }}"
-                                                        <?php if ($user->role == $role->id) {
-                                                            echo 'selected';
-                                                        } ?>>{{ $role->role_name }}</option>
+                                                    <option value="{{ $role->id }}" <?php if ($user->role == $role->id) {
+                                                        echo 'selected';
+                                                    } ?>>
+                                                        {{ $role->role_name }}</option>
                                                 @endforeach
                                             </select>
                                             @error('role')
@@ -88,22 +90,26 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <!-- </div>
-                                        <div class="form-group row "> -->
-                                    {{-- <div class=" input-field col-md-4">
-                                            <input placeholder="" autocomplete="off" name="description"
-                                                value="{{ $user->description }}" id="description">
-                                            <label for="name">Description</label>
-                                            @error('description')
-                                                <div class="input-group-append">
+                                    <div class="form-group row">
+                                        <div class="input-field col-md-6">
+                                            <input placeholder="" autocomplete="off" type="text" name="twitter_link"
+                                                value="{{ old('twitter_link') }}" id="twitter_link"
+                                                oninput="clearError('twitter_link-error')">
+                                            <label for="twitter_link">Twitter Link</label>
+
+                                            @error('twitter_link')
+                                                <div class="input-group-append" id="twitter_link-error">
                                                     <div class="input-group-text">
-                                                        <span class="me-1"><i class="fa-solid fa-circle-exclamation"></i>
-                                                            {{ $errors->first('description') }}
+                                                        <span class="me-1">
+                                                            <i class="fa-solid fa-circle-exclamation"></i>
+                                                            {{ $errors->first('twitter_link') }}
                                                         </span>
                                                     </div>
                                                 </div>
                                             @enderror
-                                        </div> --}}
+                                        </div>
+                                    </div>
+
                                     <div class="form-group row">
                                         <div class=" input-field mb-4">
                                             <label for="name">Description</label>

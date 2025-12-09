@@ -17,7 +17,7 @@
                                 <h3 class="card-title mb-0 fs-5">ADD User</h3>
                             </div>
                             <div class="uploads-container row px-1">
-                                <form method="post" action="{{ asset('alluserslist/add') }}">
+                                <form method="post" action="{{ asset('alluserslist/add') }}" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-group row ">
                                         <div class=" input-field col-md-6">
@@ -39,7 +39,8 @@
                                             <input placeholder="" autocomplete="off" type="text" name="url_name"
                                                 value="{{ old('url_name') }}" id="url_name"
                                                 oninput="clearError('url_name-error')">
-                                            <label for="name">Url Name(Name In English) <span class="text-danger">*</span></label>
+                                            <label for="name">Url Name(Name In English) <span
+                                                    class="text-danger">*</span></label>
                                             @error('url_name')
                                                 <div class="input-group-append" id="url_name-error">
                                                     <div class="input-group-text">
@@ -90,6 +91,46 @@
                                             @enderror
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <div class="input-field col-md-6">
+                                            <input type="file" name="image" id="image" accept="image/*"
+                                                oninput="clearError('image-error')">
+                                            <label for="image">Author Image</label>
+
+                                            @error('image')
+                                                <div class="input-group-append" id="image-error">
+                                                    <div class="input-group-text">
+                                                        <span class="me-1">
+                                                            <i class="fa-solid fa-circle-exclamation"></i>
+                                                            {{ $errors->first('image') }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="input-field col-md-6">
+                                            <input placeholder="" autocomplete="off" type="text" name="twitter_link"
+                                                value="{{ old('twitter_link') }}" id="twitter_link"
+                                                oninput="clearError('twitter_link-error')">
+                                            <label for="twitter_link">Twitter Link</label>
+
+                                            @error('twitter_link')
+                                                <div class="input-group-append" id="twitter_link-error">
+                                                    <div class="input-group-text">
+                                                        <span class="me-1">
+                                                            <i class="fa-solid fa-circle-exclamation"></i>
+                                                            {{ $errors->first('twitter_link') }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+
                                     <div class="form-group row ">
                                         <div class=" input-field mb-4">
                                             <label for="name">Description</label>
