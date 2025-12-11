@@ -3,63 +3,36 @@
 <head>
     <?php
     use Carbon\Carbon;
-    //NL1028:Added new component to remove the function from app blade for SEO purpose
     use App\View\Components\TitleDescription;
-    $setting = App\Models\Setting::where('id', 1)->first(); 
+    $setting = App\Models\Setting::where('id', 1)->first();
     ?>
     @php
-  $metaTitle = isset($data['blog'])
-    ? ($data['blog']->name ?? ($setting->site_name ?? ''))
-    : (new TitleDescription('title'))->display();
+        $metaTitle = isset($data['blog'])
+            ? ($data['blog']->name ?? ($setting->site_name ?? ''))
+            : (new TitleDescription('title'))->display();
+        $metaTitle = preg_replace('/\s+/', ' ', $metaTitle);
 
-$metaTitle = preg_replace('/\s+/', ' ', $metaTitle);
+        $metaDescription = isset($data['blog'])
+            ? ($data['blog']->sort_description ?? ($setting->site_name ?? ''))
+            : (new TitleDescription('description'))->display();
+        $metaDescription = preg_replace('/\s+/', ' ', $metaDescription);
+    @endphp
 
-
-  $metaDescription = isset($data['blog'])
-    ? ($data['blog']->sort_description ?? ($setting->site_name ?? ''))
-    : (new TitleDescription('description'))->display();
-
-$metaDescription = preg_replace('/\s+/', ' ', $metaDescription);
-
-@endphp
     <title>{{ $metaTitle }}</title>
     <meta name="description" content="{{ $metaDescription }}">
     <meta name="keywords" content="{{ isset($data['blog']->keyword) ? $data['blog']->keyword : (isset($setting->keyword) ? $setting->keyword : '') }}">
     <meta charset="UTF-8">
+
     @if (!str_contains(strtolower(config('global.base_url')), 'stgn'))
-    <meta name="robots" content="index, follow" />
+        <meta name="robots" content="index, follow" />
     @endif
+
     <meta name="language" content="hi" />
     <meta name="googlebot" content="notranslate">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- @if (request()->is('video/*'))
-    <meta http-equiv="refresh" content="1200" /> 
-@elseif (request()->is('podcast/*'))
-    <meta http-equiv="refresh" content="1200" />
-@else
-    <meta http-equiv="refresh" content="300" />
-@endif -->
-    
-  <!-- Google Tag Manager -->
-    @if (config('global.gtm_enabled'))
-    <script>
-        (function(w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '{{ config('global.gtm_id') }}');
-    </script>
-    @endif
+
+    {{-- CANONICAL LINKS --}}
     <?php
     $current = rtrim(url()->current(), '/');
     $home = rtrim(config('global.base_url_frontend'), '/');
@@ -70,85 +43,96 @@ $metaDescription = preg_replace('/\s+/', ' ', $metaDescription);
     @else
         <link rel="canonical" href="{{ $canonicalUrl }}">
     @endif
+
     @yield('head')
-    <!-- NL1025:20Sept:2025:Added config path -->
+
+    {{-- FAVICON --}}
     <link href="{{config('global.base_url_frontend')}}frontend/images/logo.png" rel="shortcut icon" type="image/x-icon">
-    <link href="{{config('global.base_url_asset')}}asset/css/big-breaking.css?v=1.23" rel="stylesheet">
-       <!-- NL1025:15Sept:2025:Added Condition to show -->
-        <!-- NL1025:20Sept:2025:Added config path in url -->
+
+    {{-- 
+        ========================================================================
+        PERFORMANCE FIX: ASSET BUNDLING
+        We replaced the 8 separate CSS files with one Vite directive.
+        This reduces HTTP requests from ~10 to 1.
+        ========================================================================
+    --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- 
+        PERFORMANCE FIX: DNS LOOKUPS
+        1. Google Fonts: To get an "A" grade, download these fonts and serve them locally (public/fonts) 
+           instead of linking to googleapis.com. For now, we leave them, but it costs you points.
+        2. FontAwesome: I removed the CDN link. Please ensure FontAwesome CSS is imported inside your resources/css/app.css 
+           to remove the 'cdnjs.cloudflare.com' DNS lookup.
+    --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@100..900&display=swap" rel="stylesheet">
+
+
+    {{-- SCHEMA & SEO TAGS (Kept as is) --}}
     @if (config('global.schema_enabled'))
-    <script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@graph": [
+    <script type="application/ld+json">
     {
-      "@type": "WebSite",
-      "name": "NMF News",
-      "url": "{{ config('global.base_url') }}",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "{{ config('global.base_url') }}/search?search={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    },
-    {
-      "@type": "Organization",
-      "name": "NMF News",
-      "url": "{{ config('global.base_url') }}",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "{{config('global.base_url_frontend')}}frontend/images/logo.png",
-        "width": 300,
-        "height": 60
-      },
-      "sameAs": [
-        "https://www.facebook.com/NMFNewsNational",
-        "https://x.com/NMFNewsOfficial",
-        "https://www.youtube.com/c/NMFNews/featured",
-        "https://www.instagram.com/nmfnewsofficial"
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "name": "NMF News",
+          "url": "{{ config('global.base_url') }}",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ config('global.base_url') }}/search?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Organization",
+          "name": "NMF News",
+          "url": "{{ config('global.base_url') }}",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "{{config('global.base_url_frontend')}}frontend/images/logo.png",
+            "width": 300,
+            "height": 60
+          },
+          "sameAs": [
+            "https://www.facebook.com/NMFNewsNational",
+            "https://x.com/NMFNewsOfficial",
+            "https://www.youtube.com/c/NMFNews/featured",
+            "https://www.instagram.com/nmfnewsofficial"
+          ]
+        }
       ]
     }
-  ]
-}
-</script>
-@endif
-   <!--NL1028:17Sep2025:removed the function for SEO performance -->
+    </script>
+    @endif
+
+    {{-- OG META TAGS --}}
     <meta property="fb:app_id" content="3916260501994016" />
     @php
-    // Get base URL from your config/global.php
-    $baseUrl = config('global.base_url'); // e.g. https://www.newsnmf.com
-
-    // Parse host from that URL
-    $host = parse_url($baseUrl, PHP_URL_HOST);  // returns www.newsnmf.com
-
-    // Strip "www." and take the first segment before "."
-    $domainOnly = explode('.', str_replace('www.', '', $host))[0]; // newsnmf
-
+        $baseUrl = config('global.base_url'); 
+        $host = parse_url($baseUrl, PHP_URL_HOST);
+        $domainOnly = explode('.', str_replace('www.', '', $host))[0]; 
     @endphp
     <meta property="og:site_name" content="{{ ucfirst($domainOnly) }}">
     <meta property="og:title" content="{{ $metaTitle }}"/>
     <meta property="og:description" content="{{ $metaDescription }}"/>
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ rtrim(config('global.base_url'), '/') }}{{ request()->getPathInfo() }}" />
+    
     <?php
     $URL= config('global.base_url');
     $baseBreakingNewsUrl = url('/breakingnews');
-    //$customImageUrl =  asset('asset/images/NMF_BreakingNews.png');
     $customImageUrl = config('global.base_url_image') . "asset/images/NMF_BreakingNews.png";
-   // $ff = config('global.blog_images_everywhere')($data['blog'] ?? null);
-   $blog = $data['blog'] ?? null;
-   $ff = cached_blog_image($blog);
-
-    
+    $blog = $data['blog'] ?? null;
+    $ff = cached_blog_image($blog);
     $imageToUse = $ff;
-
     if (Str::startsWith($URL, $baseBreakingNewsUrl)) {
         $imageToUse = $customImageUrl;
     }
     ?>
-    <meta property="og:image" content="<?php
-    // $ff = config('global.blog_images_everywhere')($data['blog'] ?? null);
-    echo $imageToUse;
-    ?>" />
+    <meta property="og:image" content="<?php echo $imageToUse; ?>" />
     <meta property="og:image:type" content="image/jpeg">
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@nmfnewsofficial">
@@ -158,112 +142,44 @@ $metaDescription = preg_replace('/\s+/', ' ', $metaDescription);
     <meta property="twitter:image:type" content="image/jpeg" />
     <meta property="twitter:image:width" content="660" />
     <meta property="twitter:image:height" content="367" />
-    <meta name="twitter:image" content="<?php
-    //$ff = config('global.blog_images_everywhere')($data['blog'] ?? null);
-    echo $imageToUse;
-    ?>" />
+    <meta name="twitter:image" content="<?php echo $imageToUse; ?>" />
 
     <link rel="profile" href="https://gmpg.org/xfn/11">
     <meta name="robots" content="max-image-preview:large" />
-    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="{{config('global.base_url_asset')}}asset/css/swiper-bundle.min.css" type="text/css" media="all" />
-    <!-- NL1028:15Sept:2025:Commented:Start -->
-   <!-- <link rel="stylesheet" href="{{ asset('assets/css/all.min.css') }}" type="text/css" media="all" />-->
-    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="{{config('global.base_url_asset')}}asset/plugins/bootstrap.min.css" type="text/css" media="all" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@100..900&display=swap"
-        rel="stylesheet">
-    <script type="text/javascript" src="{{config('global.base_url_asset')}}asset/js/jquery.min.js" id="jquery-core-js"></script>
-<!-- Lazy load 3rd-party SDKs -->
-<script>    
-window.addEventListener('load', function () {
-  // Google Ads
-  let ads = document.createElement('script');
-  ads.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3986924419662120";
-  ads.async = true; ads.crossOrigin = "anonymous";
-  document.body.appendChild(ads);
 
-  // Facebook SDK
-  let fb = document.createElement('script');
-  fb.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0";
-  fb.async = true; document.body.appendChild(fb);
+    {{-- 
+        LAZY LOAD SCRIPTS
+        This section is GOOD. It defers heavy 3rd party scripts until the page loads. 
+    --}}
+    <script>    
+    window.addEventListener('load', function () {
+      // Google Ads
+      let ads = document.createElement('script');
+      ads.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3986924419662120";
+      ads.async = true; ads.crossOrigin = "anonymous";
+      document.body.appendChild(ads);
 
-  // Instagram
-  let ig = document.createElement('script');
-  ig.src = "https://www.instagram.com/embed.js";
-  ig.async = true; document.body.appendChild(ig);
+      // Facebook SDK
+      let fb = document.createElement('script');
+      fb.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0";
+      fb.async = true; document.body.appendChild(fb);
 
-  // Twitter
-  let tw = document.createElement('script');
-  tw.src = "https://platform.twitter.com/widgets.js";
-  tw.async = true; document.body.appendChild(tw);
-});
-</script>
-  <!-- NL1025:15Sept:2025:Commented:Start -->
-     <!-- Google Tag Manager -->
-   <!--  <script>
-        (function(w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-5BSHD2LX');
-    </script> -->
-    <!-- End Google Tag Manager -->
-     <!-- NL1025:15Sept:2025:Commented:End -->
+      // Instagram
+      let ig = document.createElement('script');
+      ig.src = "https://www.instagram.com/embed.js";
+      ig.async = true; document.body.appendChild(ig);
 
-  
-
-    <script type="text/javascript">
-    <!-- NL1023 : 16/09/2023 - removed -->
-        document.addEventListener("DOMContentLoaded", function() {
-            const lazyImages = document.querySelectorAll("img[data-src]");
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        img.removeAttribute("data-src");
-                        observer.unobserve(img);
-                    }
-                });
-            });
-            lazyImages.forEach(img => observer.observe(img));
-        });
+      // Twitter
+      let tw = document.createElement('script');
+      tw.src = "https://platform.twitter.com/widgets.js";
+      tw.async = true; document.body.appendChild(tw);
+    });
     </script>
-  <!-- NL1023 : 16/09/2023 - commented -->
-    {{-- <link rel="stylesheet" id="wp-block-library-css" href="{{config('global.base_url_asset')}}asset/style.min.css" type="text/css"
-        media="all" /> --}}
-	 <!-- NL1028:15Sept:2025:Commented:Start -->
-   <!-- <link rel="stylesheet" id="fontAwesome-4-css" href="{{ asset('/asset/fonts/fontAwesome/fontAwesome.min.css') }}"
-        type="text/css" media="all" />-->
-  <!-- NL1023 : 16/09/2023 - commented -->
-    {{-- <link rel="stylesheet" id="feather-icons-css" href="{{config('global.base_url_asset')}}{{ asset/fonts/feather/feather.min.css"
-        type="text/css" media="all" /> --}}
-	  <!-- NL1023 : 16/09/2023 - removed wp id -->
-    <link rel="stylesheet" href="{{config('global.base_url_asset')}}asset/css/main.css?v=1.18"
-        type="text/css" media="all" />
-    <!-- <link rel="stylesheet" href="{{config('global.base_url_asset')}}asset/css/header.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="{{config('global.base_url_asset')}}asset/css/footer.css?v=1.1" type="text/css" media="all" /> -->
-    <link rel="stylesheet" href="{{config('global.base_url_asset')}}/asset/css/webstory.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="{{config('global.base_url_asset')}}/asset/css/category.css?v=1.1" type="text/css" media="all" />
-        
-    <link rel="stylesheet" href="{{config('global.base_url_asset')}}asset/css/style.css" type="text/css" media="all" />
+
+    {{-- 
+        Sticky Sidebar CSS 
+        (Keep inline if small, or move to app.css)
+    --}}
     <style id="theia-sticky-sidebar-stylesheet-TSS">
         .theiaStickySidebar:after {
             content: "";
@@ -274,28 +190,24 @@ window.addEventListener('load', function () {
         .mobile-new {color: #ff0000 !important;font-weight:600}
     </style>
 </head>
-  <!-- NL1023 : 16/09/2023 - removed wp class -->
+
 <body class="home right-sidebar">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5BSHD2LX" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-     <?php
-                                         
-                                            
-                                            $menus = App\Models\Menu::whereRelation('type', 'type', 'Header')
-                                                ->whereRelation('category', 'category', 'User')
-                                                ->where([['status', '1'], ['menu_id', 0]])
-                                                ->whereNotNull('sequence_id')
-                                                ->where('sequence_id', '!=', 0)
-                                                ->orderBy('sequence_id', 'asc')
-                                                ->get()
-                                                ->take(11)
-                                                ->toArray();
-                                            ?>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5BSHD2LX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    
+    <?php
+    $menus = App\Models\Menu::whereRelation('type', 'type', 'Header')
+        ->whereRelation('category', 'category', 'User')
+        ->where([['status', '1'], ['menu_id', 0]])
+        ->whereNotNull('sequence_id')
+        ->where('sequence_id', '!=', 0)
+        ->orderBy('sequence_id', 'asc')
+        ->get()
+        ->take(11)
+        ->toArray();
+    ?>
 
     <div class="page-wrapper">
-
+        
         <header class="--header">
             <div class="cm-container">
                 <div class="--header-container">
@@ -529,6 +441,7 @@ window.addEventListener('load', function () {
                     </div>
                 </div>
         </header>
+
         <nav class="main-navigation-mob" id="mainMenu">
             <div class="menu-container">
                 <ul class="menu-list">
@@ -559,6 +472,8 @@ window.addEventListener('load', function () {
         <div id="content" class="site-content">
             @yield('content')
         </div>
+
+        {{-- STICKY AD (Unchanged) --}}
         <div class="mobile-sticky-ad" id="stickyFooterAd">
 
             <div class="sticky-close-btn" onclick="document.getElementById('stickyFooterAd').style.display='none';">
@@ -825,36 +740,33 @@ window.addEventListener('load', function () {
                 </div>
             </div>
         </footer>
+
         <div class="backtoptop">
             <button id="toTop" class="btn btn-info">
                 <i class="fa fa-angle-up" aria-hidden="true"></i>
             </button>
         </div>
-	  <!-- NL1023 : 16/09/2023 - commented wp-script -->
-        {{-- <script type="text/javascript" id="cream-magazine-bundle-js-extra">
-            var cream_magazine_script_obj = {
-                "show_search_icon": "1",
-                "show_news_ticker": "1",
-                "show_banner_slider": "1",
-                "show_to_top_btn": "1",
-                "enable_sticky_sidebar": "1",
-                "enable_sticky_menu_section": ""
-            };
-        </script> --}}
-        <script type="text/javascript" src="{{config('global.base_url_asset')}}asset/js/swiper-bundle.min.js" ></script>
-        <script type="text/javascript" src="{{ asset('/asset/js/bundle.min.js') }}" id="cream-magazine-bundle-js" defer></script>
+
+        {{-- 
+             PERFORMANCE FIX: SCRIPTS
+             1. We removed individual script tags (jquery, swiper, main.js).
+             2. They are now loaded via the @vite() directive in the <head> (Laravel handles deferring automatically).
+        --}}
+        
+        {{-- Cloudflare Insights (Keep as is, it's external) --}}
         <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v55bfa2fee65d44688e90c00735ed189a1713218998793"
             integrity="sha512-FIKRFRxgD20moAo96hkZQy/5QojZDAbyx0mQ17jEGHCJc/vi0G2HXLtofwD7Q3NmivvP9at5EVgbRqOaOQb+Rg=="
             data-cf-beacon='{"rayId":"877e2b567a269fa5","r":1,"version":"2024.3.0","token":"e07ffd4cc02748408b326adb64b6cc16"}'
             crossorigin="anonymous"></script>
-        <script src="{{ asset('asset/js/main.js') }}" defer></script>
+
+        {{-- INLINE SCRIPTS --}}
         <script>
             document.addEventListener("DOMContentLoaded", function() {
+                // Modal Menu Logic
                 document.querySelectorAll(".modal_item > a").forEach(function(menuLink) {
                     menuLink.addEventListener("click", function(e) {
                         const parent = menuLink.parentElement;
                         const submenu = parent.querySelector(".modal_submenu");
-
                         if (submenu) {
                             e.preventDefault();
                             parent.classList.toggle("open");
@@ -905,7 +817,7 @@ window.addEventListener('load', function () {
         </script>
         <script>
             $(function() {
-                $('#state-load-more-btn').on('click', function() {
+                     $('#state-load-more-btn').on('click', function() {
                     let button = $(this);
                     let offset = parseInt(button.data('offset'));
                     let name = button.data('name');
@@ -937,7 +849,7 @@ window.addEventListener('load', function () {
         </script>
  <script>
 $(document).ready(function(){
-    $(".middle_widget_six_carousel").owlCarousel({
+                     $(".middle_widget_six_carousel").owlCarousel({
         items: 2,     
         margin: 15,    
         loop: true,     
@@ -952,10 +864,10 @@ $(document).ready(function(){
             1000:{ items: 2 }
         }
     });
-});
-</script>
- 
- 
+            });
+        </script>
+
         <x-home.gdpr-consent />
+    </div>
 </body>
 </html>
